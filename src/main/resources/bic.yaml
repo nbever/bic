@@ -1,0 +1,22 @@
+server:
+  type: simple
+  connector:
+    type: http
+    port: 8008
+
+backupConfiguration:
+  backupsToKeep: 3
+  backupLocation: db_backups
+  backupFrequency:
+    frequency: WEEKLY
+    day: 1
+
+emailConfiguration:
+  smtpServer: smtp.example.com
+  senderName: bic_admin
+  senderAddress: bic_main@hs.edu
+  smtpPort: 465
+
+dbConfiguration:
+  port: 27018
+  host: localhost

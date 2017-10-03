@@ -1,0 +1,6 @@
+dependency*.xml
+bin/
+target/
+.DS_Store
+mongodb/
+db/
