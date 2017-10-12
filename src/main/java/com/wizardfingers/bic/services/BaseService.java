@@ -9,17 +9,68 @@
  */
 package com.wizardfingers.bic.services;
 
-import com.mongodb.MongoClient;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-public class BaseService {
+import org.mongojack.DBCursor;
+import org.mongojack.JacksonDBCollection;
 
-	private MongoClient client;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.wizardfingers.bic.model.BaseObject;
+
+public abstract class BaseService<T extends BaseObject> {
+
+	private DB client;
+	private JacksonDBCollection<T, String> dbWrapper;
 	
-	public BaseService(MongoClient client) {
+	public BaseService(DB client) {
 		this.client = client;
 	}
 	
-	protected MongoClient getClient() {
+	private DB getClient() {
 		return client;
+	}
+	
+	public String save(T object) {
+		
+		if ( Optional.ofNullable(object.getUuid()).isPresent() ) {
+			return edit(object);
+		}
+		
+		return create(object);
+	}
+	
+	protected DBCollection getCollection() {
+		
+		return getClient().getCollection(getCollectionName());
+	}
+	
+	protected JacksonDBCollection<T, String> getDBWrapper() {
+		
+		if ( dbWrapper == null ) {
+			dbWrapper = JacksonDBCollection.wrap(getCollection(), getCollectionClassType(), String.class);
+		}
+		
+		return dbWrapper;
+	}
+	
+	protected abstract String getCollectionName();
+	protected abstract Class<T> getCollectionClassType();
+	protected abstract String edit(T item);
+	protected abstract String create(T item);
+	protected abstract String delete(T item);
+	
+	protected <V> List<V> convertCusrorToList( DBCursor<V> cursor) {
+		
+		List<V> results = new ArrayList<V>();
+		
+		while(cursor.hasNext()) {
+			V entry = cursor.next();
+			results.add(entry);
+		}
+		
+		return results;
 	}
 }

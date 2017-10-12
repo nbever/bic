@@ -1,7 +1,6 @@
 /* Copyright (C) 2017 Nate Bever - All Rights Reserved
  * You may use, distribute and modify this code under the
- * terms of the Apache 2.0 license, which unfortunately won't be
- * written for another century.
+ * terms of the Apache 2.0 license.
  *
  * You should have received a copy of the Apache 2.0 license with
  * this file. If not, please write to: bever.nate@gmail.com, 
@@ -19,31 +18,13 @@ public class User extends BaseObject{
 	private String lastName;
 	private String middleName;
 	private Date birthday;
-	private String studentId;
+	private String schoolId;
 	private String email;
 	private String token;
 	private Integer graduatingClass;
 	private ROLE role;
 	private Date lastLogin;
 	private String username;
-	
-	public User(){}
-	
-	public User(
-		String studentId,
-		String firstName,
-		String middleName,
-		String lastName,
-		String email,
-		Integer graduatingClass
-    ) {
-		this.studentId = studentId;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.middleName = middleName;
-		this.email = email;
-		this.graduatingClass = graduatingClass;
-	}
 	
 	@JsonProperty
 	public String getFirstName() {
@@ -81,8 +62,8 @@ public class User extends BaseObject{
 	}
 	
 	@JsonProperty
-	public String getStudentId() {
-		return studentId;
+	public String getSchoolId() {
+		return schoolId;
 	}
 	
 	@JsonProperty

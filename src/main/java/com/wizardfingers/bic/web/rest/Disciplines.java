@@ -18,38 +18,41 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.codahale.metrics.annotation.Timed;
-import com.wizardfingers.bic.model.Student;
-import com.wizardfingers.bic.services.StudentAPI;
+import com.wizardfingers.bic.model.Discipline;
+import com.wizardfingers.bic.services.DisciplineConfigAPI;
 
-@Path("/students")
+/**
+ * @author us
+ *
+ */
+@Path("/discipline")
 @Produces(MediaType.APPLICATION_JSON)
-public class Students {
+public class Disciplines {
 
-	private StudentAPI studentApi;
+	private DisciplineConfigAPI disciplineApi;
 	
-	public Students(StudentAPI studentApi) {
-		this.studentApi = studentApi;
+	public Disciplines(DisciplineConfigAPI api) {
+		this.disciplineApi = api;
 	}
 	
 	@GET
 	@Timed
-	public List<Student> getStudents() {
+	public List<Discipline> getDisciplines() {
 		
-		List<Student> users = getStudentApi().getStudents();
-		
-		return users;
+		List<Discipline> disciplines = getDisciplineApi().get();
+		return disciplines;
 	}
 	
 	@POST
 	@Timed
-	public Response createStudent(Student student) {
+	public Response createDiscipline(Discipline discipline) {
 		
-		String objectId = getStudentApi().save(student);
+		String objectId = getDisciplineApi().save(discipline);
 		
 		return Response.status(Response.Status.OK).type("text/plain").entity(objectId).build();
 	}
 	
-	private StudentAPI getStudentApi() {
-		return studentApi;
+	private DisciplineConfigAPI getDisciplineApi() {
+		return this.disciplineApi;
 	}
 }

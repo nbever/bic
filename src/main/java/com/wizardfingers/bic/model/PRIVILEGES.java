@@ -9,8 +9,14 @@
  */
 package com.wizardfingers.bic.model;
 
+import java.util.LinkedHashMap;
+import java.util.Optional;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum PRIVILEGES {
 
 	VIEW_STUDENTS("View Students", "Can view all students"), 
@@ -34,6 +40,23 @@ public enum PRIVILEGES {
 	private PRIVILEGES(String title, String description){
 		this.title = title;
 		this.description = description;
+	}
+	
+	@JsonCreator
+	public static PRIVILEGES fromString(LinkedHashMap<String, String> obj) {
+		
+		Optional<PRIVILEGES> optPriv = Optional.ofNullable(PRIVILEGES.valueOf(obj.get("value")));
+		
+		if ( optPriv.isPresent() ) {
+			return optPriv.get();
+		}
+		
+		return PRIVILEGES.VIEW_SELF;
+	}
+	
+	@JsonProperty
+	public String getValue() {
+		return this.name();
 	}
 	
 	@JsonProperty

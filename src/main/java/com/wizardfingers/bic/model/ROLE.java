@@ -9,6 +9,33 @@
  */
 package com.wizardfingers.bic.model;
 
+import java.util.LinkedHashMap;
+import java.util.Optional;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ROLE {
-	ADMIN, STUDENT, TEACHER
+	ADMIN, STUDENT, TEACHER;
+
+	@JsonCreator
+	public static ROLE fromString(LinkedHashMap<String, String> obj) {
+		
+		Optional<ROLE> optRole = Optional.ofNullable(ROLE.valueOf(obj.get("value")));
+		
+		if ( optRole.isPresent() ) {
+			return optRole.get();
+		}
+		
+		return ROLE.STUDENT;
+	}
+	
+	@JsonProperty
+	public String getValue() {
+		return this.name();
+	}
 }
+
+

@@ -11,15 +11,14 @@ package com.wizardfingers.bic.model;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Incident extends BaseObject{
 
-	private UUID studentUuid;
-	private UUID creatorUuid;
-	private UUID administratorUuid;
+	private String studentString;
+	private String creatorString;
+	private String administratorString;
 	private List<Discipline> disciplineAssignments;
 	private INCIDENT_STATE status;
 	
@@ -33,18 +32,18 @@ public class Incident extends BaseObject{
 	private String description;
 	
 	@JsonProperty
-	public UUID getStudentUuid() {
-		return studentUuid;
+	public String getStudentString() {
+		return studentString;
 	}
 	
 	@JsonProperty
-	public UUID getCreatorUuid() {
-		return creatorUuid;
+	public String getCreatorString() {
+		return creatorString;
 	}
 	
 	@JsonProperty
-	public UUID getAdministratorUuid() {
-		return administratorUuid;
+	public String getAdministratorString() {
+		return administratorString;
 	}
 	
 	@JsonProperty

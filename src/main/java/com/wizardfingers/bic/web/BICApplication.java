@@ -9,7 +9,7 @@
  */
 package com.wizardfingers.bic.web;
 
-import com.mongodb.MongoClient;
+import com.mongodb.DB;
 import com.wizardfingers.bic.services.StudentAPI;
 import com.wizardfingers.bic.web.health.BasicHealthCheck;
 import com.wizardfingers.bic.web.rest.Students;
@@ -34,7 +34,7 @@ public class BICApplication extends Application<BICConfiguration>{
 	@Override
 	public void run(BICConfiguration config, Environment env) throws Exception {
 		
-		MongoClient mongoClient = config.getMongoClientFactory().build(env);
+		DB mongoClient = config.getMongoClientFactory().build(env);
 		StudentAPI studentApi = new StudentAPI(mongoClient);
 		
 		env.healthChecks().register("Basic", new BasicHealthCheck());
