@@ -1,7 +1,6 @@
 /* Copyright (C) 2017 Nate Bever - All Rights Reserved
  * You may use, distribute and modify this code under the
- * terms of the Apache 2.0 license, which unfortunately won't be
- * written for another century.
+ * terms of the Apache 2.0 license.
  *
  * You should have received a copy of the Apache 2.0 license with
  * this file. If not, please write to: bever.nate@gmail.com, 
@@ -11,49 +10,56 @@ package com.wizardfingers.bic.services;
 
 import java.util.List;
 
-import org.mongojack.DBCursor;
 import org.mongojack.WriteResult;
 
 import com.mongodb.DB;
-import com.wizardfingers.bic.model.ROLE;
-import com.wizardfingers.bic.model.Student;
+import com.wizardfingers.bic.model.Incident;
 
-public class StudentAPI extends BaseService<Student>{
+/**
+ * @author us
+ *
+ */
+public class IncidentAPI extends BaseService<Incident>{
 
-	public static final String COLLECTION_NAME = "users";
+	public static final String COLLECTION_NAME = "incidents";
 	
-	public StudentAPI(DB client) {
+	/**
+	 * @param client
+	 */
+	public IncidentAPI(DB client) {
 		super(client);
+		// TODO Auto-generated constructor stub
 	}
 
+	/* (non-Javadoc)
+	 * @see com.wizardfingers.bic.services.BaseService#getCollectionName()
+	 */
 	@Override
 	protected String getCollectionName() {
+
 		return COLLECTION_NAME;
 	}
 	
+	public List<Incident> get() {
+		List<Incident> incidents = getDBWrapper().find().toArray();
+		return incidents;
+	}
+
 	/* (non-Javadoc)
 	 * @see com.wizardfingers.bic.services.BaseService#getCollectionClassType()
 	 */
 	@Override
-	protected Class<Student> getCollectionClassType() {
-
-		return Student.class;
-	}	
-	
-	public List<Student> getStudents() {
+	protected Class<Incident> getCollectionClassType() {
 		
-		DBCursor<Student> students = getDBWrapper().find().is("role.value", ROLE.STUDENT.name());
-		
-		List<Student> results = convertCusrorToList(students);
-		return results;
+		return Incident.class;
 	}
 
 	/* (non-Javadoc)
 	 * @see com.wizardfingers.bic.services.BaseService#edit(com.wizardfingers.bic.model.BaseObject)
 	 */
 	@Override
-	protected String edit(Student item) {
-		// TODO Auto-generated method stub
+	protected String edit(Incident item) {
+
 		return null;
 	}
 
@@ -61,9 +67,9 @@ public class StudentAPI extends BaseService<Student>{
 	 * @see com.wizardfingers.bic.services.BaseService#create(com.wizardfingers.bic.model.BaseObject)
 	 */
 	@Override
-	protected String create(Student student) {
+	protected String create(Incident item) {
 
-		WriteResult<Student, String> result = getDBWrapper().insert(student);
+		WriteResult<Incident, String> result = getDBWrapper().insert(item);
 		return result.getSavedId();
 	}
 
@@ -71,8 +77,9 @@ public class StudentAPI extends BaseService<Student>{
 	 * @see com.wizardfingers.bic.services.BaseService#delete(com.wizardfingers.bic.model.BaseObject)
 	 */
 	@Override
-	protected String delete(Student item) {
-		// TODO Auto-generated method stub
+	protected String delete(Incident item) {
+
 		return null;
 	}
+
 }

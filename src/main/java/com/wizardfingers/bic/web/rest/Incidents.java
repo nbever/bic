@@ -18,38 +18,39 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.codahale.metrics.annotation.Timed;
-import com.wizardfingers.bic.model.Student;
-import com.wizardfingers.bic.services.StudentAPI;
+import com.wizardfingers.bic.model.Incident;
+import com.wizardfingers.bic.services.IncidentAPI;
 
-@Path("/students")
+/**
+ * @author us
+ *
+ */
+@Path("/incidents")
 @Produces(MediaType.APPLICATION_JSON)
-public class Students {
+public class Incidents {
 
-	private StudentAPI studentApi;
+	private IncidentAPI incidentApi;
 	
-	public Students(StudentAPI studentApi) {
-		this.studentApi = studentApi;
+	public Incidents(IncidentAPI api) {
+		this.incidentApi = api;
 	}
 	
 	@GET
 	@Timed
-	public List<Student> getStudents() {
-		
-		List<Student> users = getStudentApi().getStudents();
-		
-		return users;
+	public List<Incident> getIncidents() {
+		List<Incident> incidents = getIncidentApi().get();
+		return incidents;
 	}
 	
 	@POST
-	@Timed
-	public Response createStudent(Student student) {
+	public Response createIncident(Incident incident) {
 		
-		String objectId = getStudentApi().save(student);
-		
-		return Response.status(Response.Status.OK).type("text/plain").entity(objectId).build();
+		String incidentId = getIncidentApi().save(incident);
+		Response r = Response.status(Response.Status.OK).type(MediaType.TEXT_PLAIN).entity(incidentId).build();
+		return r;
 	}
 	
-	private StudentAPI getStudentApi() {
-		return studentApi;
+	private IncidentAPI getIncidentApi() {
+		return this.incidentApi;
 	}
 }

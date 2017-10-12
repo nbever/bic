@@ -4,3 +4,4 @@ target/
 .DS_Store
 mongodb/
 db/
+node_modules/

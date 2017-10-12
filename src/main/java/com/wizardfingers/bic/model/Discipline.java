@@ -13,10 +13,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Discipline extends BaseObject{
 
+	private String name;
+	private String description;
 	private Boolean completed;
 	
 	@JsonProperty
 	public Boolean isCompleted() {
 		return completed;
+	}
+	
+	@JsonProperty
+	public String getDescription() {
+		return this.description;
+	}
+	
+	@JsonProperty
+	public String getName() {
+		return this.name;
 	}
 }
