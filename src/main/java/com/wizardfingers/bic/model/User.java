@@ -21,11 +21,36 @@ public class User extends BaseObject{
 	private String schoolId;
 	private String email;
 	private String token;
-	private Integer graduatingClass;
 	private ROLE role;
 	private Date lastLogin;
 	private String username;
 	
+	
+	/**
+	 * @param firstName
+	 * @param lastName
+	 * @param middleName
+	 * @param birthday
+	 * @param schoolId
+	 * @param email
+	 * @param token
+	 * @param role
+	 * @param username
+	 */
+	public User(String firstName, String lastName, String middleName, Date birthday, String schoolId, String email,
+			String token, ROLE role, String username) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.middleName = middleName;
+		this.birthday = birthday;
+		this.schoolId = schoolId;
+		this.email = email;
+		this.token = token;
+		this.role = role;
+		this.username = username;
+	}
+
 	@JsonProperty
 	public String getFirstName() {
 		return firstName;
@@ -54,11 +79,6 @@ public class User extends BaseObject{
 	@JsonProperty
 	public String getToken() {
 		return token;
-	}
-	
-	@JsonProperty
-	public Integer getGraduatingClass() {
-		return graduatingClass;
 	}
 	
 	@JsonProperty

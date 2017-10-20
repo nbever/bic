@@ -56,22 +56,6 @@ disciplines: {
 }
 
 config: {
-  db_location: string,
-  backup_config: {
-    backups: number,
-    backup_frequency: {
-      frequency: number,
-      day: number,
-      time: number
-    },
-    backup_location: string
-  },
-  email_config: {
-    smtp_server: string,
-    sender_name: string,
-    sender_address: string,
-    smtp_port: number,
-  },
   school_years: [
     {
       year: number,

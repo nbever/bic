@@ -15,6 +15,7 @@ import java.util.Optional;
 
 import org.mongojack.DBCursor;
 import org.mongojack.JacksonDBCollection;
+import org.mongojack.WriteResult;
 
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -59,8 +60,13 @@ public abstract class BaseService<T extends BaseObject> {
 	protected abstract String getCollectionName();
 	protected abstract Class<T> getCollectionClassType();
 	protected abstract String edit(T item);
-	protected abstract String create(T item);
 	protected abstract String delete(T item);
+	
+	protected String create(T item) {
+		
+		WriteResult<T, String> result = getDBWrapper().insert(item);
+		return result.getSavedId();
+	}
 	
 	protected <V> List<V> convertCusrorToList( DBCursor<V> cursor) {
 		

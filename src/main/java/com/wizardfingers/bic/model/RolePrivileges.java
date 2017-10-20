@@ -13,7 +13,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class RolePrivileges {
+public class RolePrivileges extends BaseObject{
 
 	private ROLE role;
 	private List<PRIVILEGES> privileges;
