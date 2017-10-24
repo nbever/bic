@@ -8,47 +8,47 @@
  */
 package com.wizardfingers.bic.services;
 
-import java.util.List;
-
+import com.wizardfingers.bic.model.RolePrivileges;
 import com.mongodb.DB;
-import com.wizardfingers.bic.model.Discipline;
 
-public class DisciplineConfigAPI extends BaseService<Discipline> {
+/**
+ * @author us
+ *
+ */
+public class RoleAPI extends BaseService<RolePrivileges>{
 
-	public static final String COLLECTION_NAME = "disciplines";
+	public static final String COLLECTION_NAME = "role-privileges";
 	
 	/**
 	 * @param client
 	 */
-	public DisciplineConfigAPI(DB client) {
+	public RoleAPI(DB client) {
 		super(client);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.wizardfingers.bic.services.BaseService#getCollectionName()
+	 */
 	@Override
 	protected String getCollectionName() {
-
+		
 		return COLLECTION_NAME;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see com.wizardfingers.bic.services.BaseService#getCollectionClassType()
 	 */
 	@Override
-	protected Class<Discipline> getCollectionClassType() {
-		// TODO Auto-generated method stub
-		return Discipline.class;
-	}	
-	
-	public List<Discipline> get() {
-		List<Discipline> disciplines = getDBWrapper().find().toArray();
-		return disciplines;
+	protected Class<RolePrivileges> getCollectionClassType() {
+		
+		return RolePrivileges.class;
 	}
 
 	/* (non-Javadoc)
 	 * @see com.wizardfingers.bic.services.BaseService#edit(com.wizardfingers.bic.model.BaseObject)
 	 */
 	@Override
-	protected String edit(Discipline item) {
+	protected String edit(RolePrivileges item) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -57,8 +57,9 @@ public class DisciplineConfigAPI extends BaseService<Discipline> {
 	 * @see com.wizardfingers.bic.services.BaseService#delete(com.wizardfingers.bic.model.BaseObject)
 	 */
 	@Override
-	protected String delete(Discipline item) {
+	protected String delete(RolePrivileges item) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 }

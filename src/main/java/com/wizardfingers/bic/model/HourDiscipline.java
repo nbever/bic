@@ -16,6 +16,19 @@ public class HourDiscipline extends Discipline{
 	private Float hoursCompleted;
 	private Float hoursAssigned;
 	
+	/**
+	 * @param name
+	 * @param description
+	 * @param completed
+	 */
+	public HourDiscipline(String name, String description, Boolean completed,
+		Float hoursCompleted, Float hoursAssigned ) {
+		super(name, description, completed);
+		
+		this.hoursAssigned = hoursAssigned;
+		this.hoursCompleted = hoursCompleted;
+	}
+	
 	@JsonProperty
 	public Float getHoursCompleted() {
 		return hoursCompleted;

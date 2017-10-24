@@ -14,7 +14,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Incident extends BaseObject{
+public class Incident extends BaseObject {
 
 	private String studentString;
 	private String creatorString;
@@ -30,6 +30,34 @@ public class Incident extends BaseObject{
 	private List<ModificationEvent> incidentHistory;
 	private String title;
 	private String description;
+	
+	public Incident(
+		String studentId,
+		String creatorId,
+		String adminId,
+		List<Discipline> disciplines,
+		INCIDENT_STATE status,
+		Date incidentTime,
+		Date creationTime,
+		Date administerTime,
+		String reflection,
+		List<ModificationEvent> incidentHistory,
+		String title,
+		String description
+			) {
+		this.studentString = studentId;
+		this.creatorString = creatorId;
+		this.administratorString = adminId;
+		this.disciplineAssignments = disciplines;
+		this.status = status;
+		this.incidentTime = incidentTime;
+		this.creationTime = creationTime;
+		this.administerTime = administerTime;
+		this.reflection = reflection;
+		this.incidentHistory = incidentHistory;
+		this.title = title;
+		this.description = description;
+	}
 	
 	@JsonProperty
 	public String getStudentString() {

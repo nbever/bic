@@ -10,8 +10,6 @@ package com.wizardfingers.bic.services;
 
 import java.util.List;
 
-import org.mongojack.WriteResult;
-
 import com.mongodb.DB;
 import com.wizardfingers.bic.model.Incident;
 
@@ -28,7 +26,6 @@ public class IncidentAPI extends BaseService<Incident>{
 	 */
 	public IncidentAPI(DB client) {
 		super(client);
-		// TODO Auto-generated constructor stub
 	}
 
 	/* (non-Javadoc)
@@ -61,16 +58,6 @@ public class IncidentAPI extends BaseService<Incident>{
 	protected String edit(Incident item) {
 
 		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.wizardfingers.bic.services.BaseService#create(com.wizardfingers.bic.model.BaseObject)
-	 */
-	@Override
-	protected String create(Incident item) {
-
-		WriteResult<Incident, String> result = getDBWrapper().insert(item);
-		return result.getSavedId();
 	}
 
 	/* (non-Javadoc)

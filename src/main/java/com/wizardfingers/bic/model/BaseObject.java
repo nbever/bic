@@ -17,6 +17,10 @@ public class BaseObject {
 
 	private String uuid;
 	
+	public BaseObject() {
+		uuid = (new  org.bson.types.ObjectId()).toString();
+	}
+	
 	@ObjectId
 	@JsonProperty("_id")
 	public String getUuid() {

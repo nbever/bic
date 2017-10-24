@@ -12,7 +12,6 @@ package com.wizardfingers.bic.services;
 import java.util.List;
 
 import org.mongojack.DBCursor;
-import org.mongojack.WriteResult;
 
 import com.mongodb.DB;
 import com.wizardfingers.bic.model.ROLE;
@@ -55,16 +54,6 @@ public class StudentAPI extends BaseService<Student>{
 	protected String edit(Student item) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.wizardfingers.bic.services.BaseService#create(com.wizardfingers.bic.model.BaseObject)
-	 */
-	@Override
-	protected String create(Student student) {
-
-		WriteResult<Student, String> result = getDBWrapper().insert(student);
-		return result.getSavedId();
 	}
 
 	/* (non-Javadoc)
