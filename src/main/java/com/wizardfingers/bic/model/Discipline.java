@@ -17,6 +17,15 @@ public class Discipline extends BaseObject{
 	private String description;
 	private Boolean completed;
 	
+	/**
+	 * 
+	 */
+	public Discipline( String name, String description, Boolean completed ) {
+		this.name = name;
+		this.description = description;
+		this.completed = completed;
+	}
+	
 	@JsonProperty
 	public Boolean isCompleted() {
 		return completed;

@@ -15,13 +15,19 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wizardfingers.bic.model.AssignmentDiscipline;
+import com.wizardfingers.bic.model.Discipline;
+import com.wizardfingers.bic.model.HourDiscipline;
+import com.wizardfingers.bic.model.INCIDENT_STATE;
+import com.wizardfingers.bic.model.Incident;
 import com.wizardfingers.bic.model.PRIVILEGES;
 import com.wizardfingers.bic.model.ROLE;
 import com.wizardfingers.bic.model.RolePrivileges;
@@ -29,6 +35,8 @@ import com.wizardfingers.bic.model.Student;
 import com.wizardfingers.bic.model.User;
 
 public class DBLoader {
+	
+	private static final Integer thisYear = 2017;
 
 	public static void main(String[] args) {
 		
@@ -72,7 +80,9 @@ public class DBLoader {
 			
 			createDefaultRoles(fw);
 			
-			createDisciplines(fw);
+			List<Discipline> disciplines = createDisciplineConfiguration(fw);
+			
+			createDisciplines(fw, students, users, disciplines);
 		}
 	}
 	
@@ -113,7 +123,7 @@ public class DBLoader {
 			String middleName = names[1];
 			String lastName = names[2];
 			
-			Integer graduatingClass = 2017 + Math.floorDiv(i, 100);
+			Integer graduatingClass = thisYear + Math.floorDiv(i, 100);
 			String schoolId = UUID.randomUUID().toString();
 			String email = firstName.toLowerCase() + "." + middleName.toLowerCase().substring(0,  1) + "." + lastName.toLowerCase() + "@gmail.com";
 			ROLE role = ROLE.STUDENT;
@@ -128,7 +138,6 @@ public class DBLoader {
 			
 			ObjectMapper om = new ObjectMapper();
 			String json = om.writeValueAsString(student);
-			json = json.replaceAll(",\"_id\":null", "");
 			fw.write("db.user.insert(" + json + ");\n");
 		}
 		
@@ -166,7 +175,6 @@ public class DBLoader {
 			
 			ObjectMapper om = new ObjectMapper();
 			String json = om.writeValueAsString(teacher);
-			json = json.replaceAll(",\"_id\":null", "");
 			fw.write("db.user.insert(" + json + ");\n");
 		}
 		
@@ -194,18 +202,134 @@ public class DBLoader {
 			try {
 				ObjectMapper om = new ObjectMapper();
 				String json = om.writeValueAsString(privilegeSet);
-				json = json.replaceAll(",\"_id\":null", "");
 				fw.write("db.role_privileges.insert(" + json + ");\n");
 			}
 			catch( IOException e ){
 				e.printStackTrace();
 			}
 		});
-		
 	}
 	
-	private void createDisciplines(FileWriter fw) {
+	private List<Discipline> createDisciplineConfiguration(FileWriter fw) {
+		List<Discipline> disciplines = new ArrayList<Discipline>();
 		
+		disciplines.add( new HourDiscipline("Truancy", "Super late many times", false, 0.0f, 1.0f));
+		disciplines.add( new HourDiscipline("Disrespectful 1", "Poor attitude first offense", false, 0.0f, 2.5f));
+		disciplines.add( new HourDiscipline("Disrespectful 2", "Poor attitude multiple offense", false, 0.0f, 6.0f));
+		disciplines.add( new HourDiscipline("Foul Language", "Offensive language observed", false, 0.0f, 2.0f));
+		disciplines.add( new HourDiscipline("Dangerous behavior", "Eating old yogurt", false, 0.0f, 10.0f));
+		
+		disciplines.add( new AssignmentDiscipline("TMNT hating", "Disparaging comments towards TMNT", false, null, null, "Lunch detention" ));
+		disciplines.add( new AssignmentDiscipline("Foul Language 2", "Repeated foul language", false, null, null, "Lunch detention" ));
+		disciplines.add( new AssignmentDiscipline("Treason", "Giving opposing teams inside information", false, null, null, "Loss of school event" ));
+		
+		disciplines.stream().forEach( discipline -> {
+			try {
+				ObjectMapper om = new ObjectMapper();
+				String json = om.writeValueAsString(discipline);
+				fw.write("db.default_disciplines.insert(" + json + ");\n");
+			}
+			catch( IOException e ){
+				e.printStackTrace();
+			}
+		});
+		
+		return disciplines;
+	}
+	
+	private void createDisciplines(FileWriter fw, List<Student> students, List<User> teachers, List<Discipline> disciplineOptions) throws IOException {
+		
+		Random random = new Random();
+		int incidentsToBuild = random.nextInt(500);
+		
+		for ( int i = 0; i < incidentsToBuild; i++ ) {
+			Student student = students.get(random.nextInt(students.size()-1));
+			User teacher = students.get(random.nextInt(teachers.size()-1));
+			User admin = students.get(random.nextInt(2));
+			int incidentYear = random.nextInt(thisYear - (student.getGraduatingClass() - 4)) + thisYear;
+			
+			Calendar incidentCalendar = Calendar.getInstance();
+			incidentCalendar.set(Calendar.MONTH, Calendar.JUNE);
+			incidentCalendar.set(Calendar.HOUR_OF_DAY, 8);
+			incidentCalendar.add(Calendar.DAY_OF_YEAR, -1 * random.nextInt(10*30));
+			incidentCalendar.add(Calendar.HOUR_OF_DAY, random.nextInt(8));
+			incidentCalendar.set(Calendar.MINUTE, random.nextInt(60));
+			
+			
+			INCIDENT_STATE status = INCIDENT_STATE.PENDING_RESTITUTION;
+			
+			if ( incidentYear == thisYear || random.nextInt(100) < 10) {
+				status = INCIDENT_STATE.values()[random.nextInt(INCIDENT_STATE.values().length)];
+			}
+			
+			Discipline d = disciplineOptions.get(random.nextInt(disciplineOptions.size()));
+			Boolean completed = status == INCIDENT_STATE.COMPLETED;
+			
+			if ( d instanceof HourDiscipline ) {
+				
+				Float hoursDone = ((HourDiscipline) d).getHoursAssigned();
+				
+				if ( status == INCIDENT_STATE.WAITING_ADMINISTRATION ) {
+					hoursDone = 0.0f;
+				}
+				else if ( status == INCIDENT_STATE.PENDING_RESTITUTION ) {
+					hoursDone = random.nextFloat() * ((HourDiscipline) d).getHoursAssigned();
+				}
+				
+				d = new HourDiscipline(d.getName(), d.getDescription(),
+					completed, hoursDone, ((HourDiscipline) d).getHoursAssigned());
+			}
+			else {
+				
+				Calendar scheduleCalendar = Calendar.getInstance();
+				scheduleCalendar.setTime(incidentCalendar.getTime());
+				scheduleCalendar.add(Calendar.DAY_OF_MONTH, random.nextInt(21));
+				
+				Date completedCalendar = null;
+				
+				if ( status == INCIDENT_STATE.COMPLETED || status == INCIDENT_STATE.PENDING_RESTITUTION ) {
+					completedCalendar =  ((Calendar)scheduleCalendar.clone()).getTime();
+				}
+				
+				d = new AssignmentDiscipline(d.getName(), d.getDescription(), 
+					status == INCIDENT_STATE.COMPLETED, scheduleCalendar.getTime(), 
+					completedCalendar, ((AssignmentDiscipline)d).getAssignmentDescription());
+			}
+			
+			Date adminDate = null;
+			
+			if ( status != INCIDENT_STATE.WAITING_ADMINISTRATION ) {
+				Calendar adminCal = (Calendar)incidentCalendar.clone();
+				adminCal.add(Calendar.DAY_OF_MONTH, random.nextInt(2));
+				adminDate = adminCal.getTime();
+			}
+			
+			String reflection = null;
+			
+			if ( random.nextInt(100) < 25 || status == INCIDENT_STATE.COMPLETED ) {
+				reflection = "I am really really sorry and feel just terrible about it.";
+			}
+			
+			Incident incident = new Incident(
+				student.getUuid(),
+				teacher.getUuid(),
+				admin.getUuid(),
+				Arrays.asList(d),
+				status,
+				incidentCalendar.getTime(),
+				incidentCalendar.getTime(),
+				adminDate,
+				reflection,
+				Collections.emptyList(),
+				d.getName(),
+				d.getDescription()
+			);
+			
+			ObjectMapper om = new ObjectMapper();
+			String json = om.writeValueAsString(incident);
+			json = json.replaceAll(",\"_id\":null", "");
+			fw.write("db.incidents.insert(" + json + ");\n");
+		}
 	}
 	
 	private FileWriter getFileWriter() throws IOException {

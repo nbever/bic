@@ -19,6 +19,22 @@ public class AssignmentDiscipline extends Discipline{
 	private Date dateServed;
 	private String assignmentDescription;
 	
+	/**
+	 * @param name
+	 * @param description
+	 * @param completed
+	 */
+	public AssignmentDiscipline(String name, String description, Boolean completed,
+		Date scheduledDate, Date dateServed, String assignmentDescription) {
+		
+		super(name, description, completed);
+		
+		this.scheduledDate = scheduledDate;
+		this.dateServed = dateServed;
+		this.assignmentDescription = assignmentDescription;
+	}
+
+	
 	@JsonProperty
 	public Date getScheduledDate() {
 		return scheduledDate;
