@@ -129,8 +129,8 @@ public class DBLoader {
 			ROLE role = ROLE.STUDENT;
 			String userName = firstName.toLowerCase().substring(0, 1) + lastName.toLowerCase() + ((int)(Math.random() * 100));
 			Instant instant = Instant.now();
-			instant.minus(Duration.ofDays(365*16));
-			instant.plusMillis((int)(Math.random() * (1000*60*60*24*365)));
+			instant = instant.minus(Duration.ofDays(365*(13+ thisYear - graduatingClass)));
+			instant = instant.plusMillis((int)(Math.random() * (1000*60*60*24*365)));
 			Date birthday = new Date(instant.getEpochSecond()*1000);
 			
 			Student student = new Student(firstName, lastName, middleName, birthday, schoolId, email, null, role, userName, graduatingClass );
@@ -166,8 +166,8 @@ public class DBLoader {
 			
 			String userName = firstName.toLowerCase().substring(0, 1) + lastName.toLowerCase() + ((int)(Math.random() * 100));
 			Instant instant = Instant.now();
-			instant.minus(Duration.ofDays(365*((int)(Math.random() * 15))));
-			instant.plusMillis((int)(Math.random() * (1000*60*60*24*365)));
+			instant = instant.minus(Duration.ofDays(365 * ((int)(Math.random() * 45) ) + 22 ));
+			instant = instant.plusMillis((int)(Math.random() * (1000*60*60*24*365)));
 			Date birthday = new Date(instant.getEpochSecond()*1000);
 			
 			User teacher = new User(firstName, lastName, middleName, birthday, schoolId, email, null, role, userName );
@@ -327,7 +327,6 @@ public class DBLoader {
 			
 			ObjectMapper om = new ObjectMapper();
 			String json = om.writeValueAsString(incident);
-			json = json.replaceAll(",\"_id\":null", "");
 			fw.write("db.incidents.insert(" + json + ");\n");
 		}
 	}

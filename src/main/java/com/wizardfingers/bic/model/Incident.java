@@ -13,6 +13,10 @@ import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.wizardfingers.bic.model.serializers.JsonDateDeserializer;
+import com.wizardfingers.bic.model.serializers.JsonDateSerializer;
 
 public class Incident extends BaseObject {
 
@@ -84,16 +88,22 @@ public class Incident extends BaseObject {
 		return status;
 	}
 	
+	@JsonSerialize(using=JsonDateSerializer.class)
+	@JsonDeserialize(using=JsonDateDeserializer.class)
 	@JsonProperty
 	public Date getIncidentTime() {
 		return incidentTime;
 	}
 	
+	@JsonSerialize(using=JsonDateSerializer.class)
+	@JsonDeserialize(using=JsonDateDeserializer.class)
 	@JsonProperty
 	public Date getCreationTime() {
 		return creationTime;
 	}
 	
+	@JsonSerialize(using=JsonDateSerializer.class)
+	@JsonDeserialize(using=JsonDateDeserializer.class)
 	@JsonProperty
 	public Date getAdministerTime() {
 		return administerTime;
