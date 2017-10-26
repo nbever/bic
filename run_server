@@ -1,0 +1,89 @@
+#!/bin/bash
+#java -jar target/BIC-0.0.1-SNAPSHOT.jar server target/classes/main/resources/bic.yaml
+key="$1"
+BUILD=false
+RUN_JAVA=false
+RUN_WEB=false
+STOP=false
+
+for i in "$@"
+do
+
+case $i in
+  -b|build)
+  BUILD=true
+  ;;
+  -r|run)
+  RUN_JAVA=true
+  RUN_WEB=true
+  ;;
+  -s|server)
+  RUN_JAVA=true
+  ;;
+  -w|web)
+  RUN_WEB=true
+  ;;
+  stop)
+  STOP=true
+  ;;
+  -h|--help|help)
+  echo -e "-b | build\tBuild the product."
+  echo -e "-r | run\tRun both the server and the web in development mode."
+  echo -e "-s | server\tRun the Java web server."
+  echo -e "-w | web\tRun the web server in dev mode."
+  echo -e "stop\tStop everything."
+  exit 0
+  ;;
+esac
+done
+
+if $STOP
+then
+  echo "Stopping WebApp..."
+  WPID=$(<.bic_web.pid)
+  kill $WPID
+  rm .bic_web.pid
+  echo "Stopping Server..."
+  JPID=$(<.bic_server.pid)
+  kill $JPID
+  rm .bic_server.pid
+  echo "Processes stopped."
+  exit 0
+fi
+
+if $BUILD
+then
+  echo "Building project..."
+  echo "[Java]"
+  mvn package
+  echo "[Web App]"
+  pushd src/web
+  echo "-- installing dependencies"
+  npm i
+  echo "-- building"
+  npm run build
+  popd
+  echo "Done building."
+fi
+
+if $RUN_JAVA
+then
+  echo "Starting Java Web Server..."
+  java -jar target/BIC-0.0.1-SNAPSHOT.jar server target/classes/main/resources/bic.yaml &
+  JPID=$!
+  echo "${JPID}" > .bic_server.pid
+  echo "Web Server started."
+fi
+
+if $RUN_WEB
+then
+  echo "Starting WebApp..."
+  pushd src/web
+  npm run start &
+  PID=$!
+  popd
+  echo "${PID}" > .bic_web.pid
+  echo "WebApp started."
+fi
+
+exit 0
