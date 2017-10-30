@@ -5,3 +5,4 @@ target/
 mongodb/
 db/
 node_modules/
+dist/
