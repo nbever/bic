@@ -9,8 +9,6 @@
  */
 package com.wizardfingers.bic.model;
 
-import org.mongojack.ObjectId;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class BaseObject {
@@ -18,10 +16,9 @@ public class BaseObject {
 	private String uuid;
 	
 	public BaseObject() {
-		uuid = (new  org.bson.types.ObjectId()).toString();
+		uuid = (new org.bson.types.ObjectId()).toString();
 	}
 	
-	@ObjectId
 	@JsonProperty("_id")
 	public String getUuid() {
 		return uuid;

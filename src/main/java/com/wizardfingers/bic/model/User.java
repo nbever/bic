@@ -11,6 +11,10 @@ package com.wizardfingers.bic.model;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.wizardfingers.bic.model.serializers.JsonDateDeserializer;
+import com.wizardfingers.bic.model.serializers.JsonDateSerializer;
 
 public class User extends BaseObject{
 
@@ -25,6 +29,9 @@ public class User extends BaseObject{
 	private Date lastLogin;
 	private String username;
 	
+	protected User() {
+		super();
+	}
 	
 	/**
 	 * @param firstName
@@ -66,6 +73,8 @@ public class User extends BaseObject{
 		return middleName;
 	}
 	
+	@JsonSerialize(using=JsonDateSerializer.class)
+	@JsonDeserialize(using=JsonDateDeserializer.class)
 	@JsonProperty
 	public Date getBirthday() {
 		return birthday;
@@ -91,6 +100,8 @@ public class User extends BaseObject{
 		return role;
 	}
 	
+	@JsonSerialize(using=JsonDateSerializer.class)
+	@JsonDeserialize(using=JsonDateDeserializer.class)
 	@JsonProperty
 	public Date getLastLogin() {
 		return lastLogin;

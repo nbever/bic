@@ -19,7 +19,7 @@ import com.wizardfingers.bic.model.Student;
 
 public class StudentAPI extends BaseService<Student>{
 
-	public static final String COLLECTION_NAME = "users";
+	public static final String COLLECTION_NAME = "user";
 	
 	public StudentAPI(DB client) {
 		super(client);

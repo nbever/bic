@@ -6,6 +6,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Student extends User{
 
+	protected Student(){
+		super();
+	}
+	
 	/**
 	 * @param firstName
 	 * @param lastName

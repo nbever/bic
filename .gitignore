@@ -6,3 +6,6 @@ mongodb/
 db/
 node_modules/
 dist/
+src/web/npm-debug.log
+.bic_web.pid
+.bic_server.pid

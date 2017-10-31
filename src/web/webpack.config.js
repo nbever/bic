@@ -3,6 +3,7 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const distDir = '../../dist';
 
 module.exports = {
   entry: {
@@ -16,8 +17,11 @@ module.exports = {
   },
   devtool: 'source-map',
   devServer: {
-    contentBase: './dist',
-    historyApiFallback: true
+    contentBase: distDir,
+    historyApiFallback: true,
+    proxy: {
+      '/api': 'http://localhost:8008'
+    }
   },
   module: {
     rules: [
@@ -59,7 +63,7 @@ module.exports = {
   ],
   output: {
     filename: "[name]-bundle.js",
-    path: path.resolve(__dirname, "./dist"),
+    path: path.resolve(__dirname, distDir),
     publicPath: "/"
   },
 };
