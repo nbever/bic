@@ -41,7 +41,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new CleanWebpackPlugin([distDir]),
+    new CleanWebpackPlugin([distDir], {allowExternal: true}),
     new webpack.IgnorePlugin(/vertx/),
     // This plugin will generate an index.html file for us that can be used
     // by the Webpack dev server. We can give it a template file (written in EJS)
@@ -56,6 +56,9 @@ module.exports = {
     new CopyWebpackPlugin([{
       from: path.resolve(__dirname, 'node_modules/@webcomponents/webcomponentsjs/*.js'),
       to: 'webcomponentsjs/[name].[ext]'
+    }, {
+      from: path.resolve(__dirname, './src/assets'),
+      to: 'assets'
     }])
   ],
   output: {

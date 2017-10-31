@@ -8,6 +8,7 @@ import FoodService from './services/FoodService';
 import ListBuilder from './components/ListBuilder';
 import TabBar from './components/TabBar';
 import SlideInput from './components/SlideInput';
+import AlertBar from './components/AlertBar';
 
 // setup services
 ServiceRegistry.register(BeverageService, FoodService);

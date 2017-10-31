@@ -1,0 +1,113 @@
+@font-face {
+  font-family: 'bic-icons';
+  src:  url('bic-icons.eot?weqnlp');
+  src:  url('bic-icons.eot?weqnlp#iefix') format('embedded-opentype'),
+    url('bic-icons.ttf?weqnlp') format('truetype'),
+    url('bic-icons.woff?weqnlp') format('woff'),
+    url('bic-icons.svg?weqnlp#bic-icons') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="bic-icon-"], [class*=" bic-icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'bic-icons' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.bic-icon-location2:before {
+  content: "\e948";
+}
+.bic-icon-compass2:before {
+  content: "\e94a";
+}
+.bic-icon-clock:before {
+  content: "\e94e";
+}
+.bic-icon-alarm:before {
+  content: "\e950";
+}
+.bic-icon-calendar:before {
+  content: "\e953";
+}
+.bic-icon-spinner10:before {
+  content: "\e983";
+}
+.bic-icon-search:before {
+  content: "\e986";
+}
+.bic-icon-plus:before {
+  content: "\ea0a";
+}
+.bic-icon-minus:before {
+  content: "\ea0b";
+}
+.bic-icon-cancel-circle:before {
+  content: "\ea0d";
+}
+.bic-icon-cross:before {
+  content: "\ea0f";
+}
+.bic-icon-checkmark:before {
+  content: "\ea10";
+}
+.bic-icon-checkmark2:before {
+  content: "\ea11";
+}
+.bic-icon-circle-up:before {
+  content: "\ea41";
+}
+.bic-icon-circle-right:before {
+  content: "\ea42";
+}
+.bic-icon-circle-down:before {
+  content: "\ea43";
+}
+.bic-icon-circle-left:before {
+  content: "\ea44";
+}
+.bic-icon-justice_scales:before {
+  content: "\e900";
+}
+.bic-icon-add_user:before {
+  content: "\e901";
+}
+.bic-icon-delete_user:before {
+  content: "\e902";
+}
+.bic-icon-delete:before {
+  content: "\e903";
+}
+.bic-icon-edit:before {
+  content: "\e904";
+}
+.bic-icon-gavel:before {
+  content: "\e905";
+}
+.bic-icon-group_settings:before {
+  content: "\e906";
+}
+.bic-icon-list:before {
+  content: "\e907";
+}
+.bic-icon-reflection:before {
+  content: "\e908";
+}
+.bic-icon-remove:before {
+  content: "\e909";
+}
+.bic-icon-search_user:before {
+  content: "\e90a";
+}
+.bic-icon-trends:before {
+  content: "\e90b";
+}
