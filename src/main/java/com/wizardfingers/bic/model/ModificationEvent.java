@@ -13,6 +13,10 @@ import java.util.Date;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.wizardfingers.bic.model.serializers.JsonDateDeserializer;
+import com.wizardfingers.bic.model.serializers.JsonDateSerializer;
 
 public class ModificationEvent {
 
@@ -20,8 +24,10 @@ public class ModificationEvent {
 	private String fieldChanged;
 	private Object previousValue;
 	private Object newValue;
-	private UUID editorUuid;
+	private String editorUuid;
 	
+	@JsonSerialize(using=JsonDateSerializer.class)
+	@JsonDeserialize(using=JsonDateDeserializer.class)
 	@JsonProperty
 	public Date getModifyDate() {
 		return modifyDate;
@@ -43,7 +49,7 @@ public class ModificationEvent {
 	}
 	
 	@JsonProperty
-	public UUID getEditorUuid() {
+	public String getEditorUuid() {
 		return editorUuid;
 	}
 	
