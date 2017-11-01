@@ -13,6 +13,7 @@ import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -34,6 +35,16 @@ public class Students {
 	
 	public Students(StudentAPI studentApi) {
 		this.studentApi = studentApi;
+	}
+	
+	@GET
+	@Timed
+	@Path("/{id}")
+	public Student getStudent(@PathParam("id") String id) {
+		
+		Student student = getStudentApi().getStudent( id );
+		
+		return student;
 	}
 	
 	@GET

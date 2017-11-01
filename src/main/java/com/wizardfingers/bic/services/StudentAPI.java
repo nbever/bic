@@ -72,6 +72,17 @@ public class StudentAPI extends BaseService<Student>{
 		List<Student> results = convertCusrorToList(students);
 		return results;
 	}
+	
+	public Student getStudent( String id ) {
+		DBCursor<Student> student = getDBWrapper().find().is("_id", id);
+		List<Student> matches = student.toArray();
+		
+		if ( matches.size() > 0 ) {
+			return matches.get(0);
+		}
+		
+		return null;
+	}
 
 	/* (non-Javadoc)
 	 * @see com.wizardfingers.bic.services.BaseService#edit(com.wizardfingers.bic.model.BaseObject)
