@@ -8,9 +8,10 @@
  */
 package com.wizardfingers.bic.web.rest;
 
-import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+
+import com.wizardfingers.bic.model.LoginParams;
 
 /**
  * @author us
@@ -20,7 +21,7 @@ import javax.ws.rs.PathParam;
 public class Login {
 
 	@POST
-	public String login( Login login ) {
+	public String login( LoginParams login ) {
 		System.out.println(login.getToken() );
 		return "YES!";
 	}
