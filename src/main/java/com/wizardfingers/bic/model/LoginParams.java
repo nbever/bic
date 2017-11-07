@@ -18,6 +18,8 @@ public class LoginParams {
 
 	private String token;
 	
+	public LoginParams(){}
+	
 	@JsonProperty
 	public String getToken() {
 		return token;

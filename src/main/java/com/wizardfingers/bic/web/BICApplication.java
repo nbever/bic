@@ -12,6 +12,7 @@ package com.wizardfingers.bic.web;
 import com.mongodb.DB;
 import com.wizardfingers.bic.services.StudentAPI;
 import com.wizardfingers.bic.web.health.BasicHealthCheck;
+import com.wizardfingers.bic.web.rest.Login;
 import com.wizardfingers.bic.web.rest.Students;
 
 import io.dropwizard.Application;
@@ -41,6 +42,8 @@ public class BICApplication extends Application<BICConfiguration>{
 		
 		Students studentResource = new Students(studentApi);
 		env.jersey().register(studentResource);
+		
+		env.jersey().register(new Login() );
 		
 	}
 

@@ -107,7 +107,14 @@ class AppFrame extends BaseElement {
     // If the signin status is changed to signedIn, we make an API call.
     if (isSignedIn) {
       const auth = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().id_token;
-      fetch(`/api/login/${auth}`).then((resp) => {
+      fetch(`/api/login`, {
+        method: 'post',
+        body: JSON.stringify({ token: auth }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'text/plain'
+        }
+      }).then((resp) => {
         alert(resp);
       });
     }
