@@ -1,9 +1,11 @@
 server:
-  type: simple
   applicationContextPath: /api
-  connector:
-    type: http
-    port: 8008
+  applicationConnectors:
+    - type: https
+      port: 8443
+      keyStorePath: .keystore
+      keyStorePassword: wizardfingers
+      keyStoreType: JKS
 
 backupConfiguration:
   backupsToKeep: 3
