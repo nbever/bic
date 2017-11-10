@@ -43,7 +43,7 @@ public class BICApplication extends Application<BICConfiguration>{
 		Students studentResource = new Students(studentApi);
 		env.jersey().register(studentResource);
 		
-		env.jersey().register(new Login() );
+		env.jersey().register(new Login(config.getAuthConfiguration()) );
 		
 	}
 

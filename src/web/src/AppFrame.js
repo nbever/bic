@@ -1,6 +1,7 @@
 import { BaseElement, registerElement } from 'single-malt';
 import MainTabs from './MainTabs';
 import AlertBar from './components/AlertBar';
+import isNil from 'lodash/isNil';
 
 class AppFrame extends BaseElement {
 
@@ -26,12 +27,34 @@ class AppFrame extends BaseElement {
           background-color: black;
         }
 
-        .logo {
+        .logout {
+          color: white;
+          cursor: pointer;
+        }
+
+        .logged-out {
+          background-color: black;
+          height: 100%;
+          width: 100%;
+          text-align: center;
+          padding-top: 100px;
+        }
+
+        .logo{
           background-image: url('assets/sandpoinths.jpg');
+          background-size: contain;
+        }
+
+        .logo.logged-in {
+          float: left;
           height: 64px;
           width: 64px;
-          background-size: contain;
-          float: left;
+        }
+
+        .logged-out .logo{
+          margin: auto;
+          height: 128px;
+          width: 128px;
         }
 
         .top-container {
@@ -50,79 +73,139 @@ class AppFrame extends BaseElement {
           width: 80px;
           height: 100%;
         }
+
+        .hide {
+          display: none;
+        }
+
+        .google-text-block {
+          font-family: 'Roboto', sans-serif;
+        }
+
+        .login-button {
+            padding-right: 8px;
+            border-radius: 2px;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .button-container {
+          display: flex;
+          justify-content: center;
+        }
+
+        .google-icon {
+          text-indent: -9999px;
+          width: 32px;
+          height: 32px;
+          background-image: url('assets/btn_google_light_normal_ios.svg');
+          background-size: 32px 32px;
+          padding-right: 6px;
+          background-repeat: no-repeat;
+        }
       </style>
       <div class="app">
-        <div class="header">
-          <div class="logo"></div>
+        <div class="header hide">
+          <div class="logo logged-in"></div>
           <div class="top-container">
             <div class="title">Sandpoint BIC</div>
             <div class="login">
               <div>Nate</div>
+              <a class="logout">Logout</a>
             </div>
           </div>
         </div>
-        <alert-bar></alert-bar>
-        <main-tabs></main-tabs>
-        <span class="content">
-        </span>
-        <button>Sign in with Google</button>
+        <div class="logged-out">
+          <div class="logo"></div>
+          <div class="title">Sandpoint BIC</div>
+          <div class="button-container">
+            <div class="login-button">
+              <div class="google-icon"></div>
+              <div class="google-text-block">Sign in with Google</div>
+            </div>
+          </div>
+        </div>
+        <div class="main-content hide">
+          <alert-bar></alert-bar>
+          <main-tabs></main-tabs>
+          <span class="content">
+          </span>
+        </div>
       </div>
     `;
 
     return template;
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    this.AuthorizationService.registerForChanges(this);
+
+    this.AuthorizationService.loggedin;
+  }
+
   addEventListeners() {
-    const button = this.shadowRoot.querySelector('button');
-    button.addEventListener('click', this.login);
+    const loginButton = this.shadowRoot.querySelector('.login-button');
+    const logout = this.shadowRoot.querySelector('.logout');
+    loginButton.addEventListener('click', this.AuthorizationService.login);
+    logout.addEventListener('click', this.AuthorizationService.logout);
   }
 
   removeEventListeners() {
-    const button = this.shadowRoot.querySelector('button');
-    button.removeEventListener('click', this.login);
+    const loginButton = this.shadowRoot.querySelector('.login-button');
+    const logout = this.shadowRoot.querySelector('.logout');
+    loginButton.removeEventListener('click', this.AuthorizationService.login);
+    logout.removeEventListener('click', this.AuthorizationService.logout);
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    gapi.load('client:auth2', this.initClient);
-  }
-
-  initClient = () => {
-    gapi.client.init({
-        apiKey: 'tlpqYPNIm9Tp1A1WDdeEiSx2',
-        // discoveryDocs: ["https://people.googleapis.com/$discovery/rest?version=v1"],
-        clientId: '0fr33eunhkaqekio6j3uct03bg4c1ut6.apps.googleusercontent.com',
-        scope: 'profile'
-    }).then( () => {
-      // Listen for sign-in state changes.
-      gapi.auth2.getAuthInstance().isSignedIn.listen(this.updateSigninStatus);
-
-      // Handle the initial sign-in state.
-      this.updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-    });
+  authChanged = (loggedin) => {
+    if (loggedin === true) {
+      this.showApp();
+    }
+    else {
+      this.hideApp();
+    }
   };
 
-  updateSigninStatus = (isSignedIn, a, b) => {
-    // When signin status changes, this function is called.
-    // If the signin status is changed to signedIn, we make an API call.
-    if (isSignedIn) {
-      const auth = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().id_token;
-      fetch(`/api/login`, {
-        method: 'post',
-        body: JSON.stringify({ token: auth }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'text/plain'
-        }
-      }).then((resp) => {
-        alert(resp);
-      });
+  get header() {
+    if ( isNil(this._header) ) {
+      this._header = this.shadowRoot.querySelector('.header');
     }
+
+    return this._header;
   }
 
-  login = () => {
-    gapi.auth2.getAuthInstance().signIn();
+  get loggedOut() {
+    if (isNil(this._loggedout)) {
+      this._loggedout = this.shadowRoot.querySelector('.logged-out');
+    }
+
+    return this._loggedout;
+  }
+
+  get mainContent() {
+    if ( isNil(this._mainContent)) {
+      this._mainContent = this.shadowRoot.querySelector('.main-content');
+    }
+
+    return this._mainContent;
+  }
+
+  showApp = () => {
+    this.removeClass( this.mainContent, 'hide' );
+    this.removeClass( this.header, 'hide' );
+
+    this.addClass( this.loggedOut, 'hide' );
+  };
+
+  hideApp = () => {
+    this.removeClass( this.loggedOut, 'hide' );
+
+    this.addClass( this.mainContent, 'hide' );
+    this.addClass( this.header, 'hide' );
   };
 }
 
-export default registerElement()(AppFrame);
+export default registerElement('AuthorizationService')(AppFrame);

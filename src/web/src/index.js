@@ -3,6 +3,7 @@ import { ServiceRegistry } from 'single-malt';
 
 import BeverageService from './services/BeverageService';
 import FoodService from './services/FoodService';
+import AuthorizationService from './services/AuthorizationService';
 
 // load widgets
 import ListBuilder from './components/ListBuilder';
@@ -11,7 +12,7 @@ import SlideInput from './components/SlideInput';
 import AlertBar from './components/AlertBar';
 
 // setup services
-ServiceRegistry.register(BeverageService, FoodService);
+ServiceRegistry.register(AuthorizationService, BeverageService, FoodService);
 
 const AppFrame = require('./AppFrame');
 

@@ -11,6 +11,7 @@ package com.wizardfingers.bic.web;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wizardfingers.bic.db.MongoClientFactory;
+import com.wizardfingers.bic.model.config.AuthConfig;
 import com.wizardfingers.bic.model.config.BackupConfig;
 import com.wizardfingers.bic.model.config.EmailConfig;
 
@@ -20,6 +21,7 @@ public class BICConfiguration extends Configuration {
 
 	private BackupConfig backupConfiguration;
 	private EmailConfig emailConfiguration;
+	private AuthConfig authConfiguration;
 
 	private MongoClientFactory mongoConnectionFactory = new MongoClientFactory();
 	
@@ -31,6 +33,11 @@ public class BICConfiguration extends Configuration {
 	@JsonProperty
 	public EmailConfig getEmailConfiguration() {
 		return emailConfiguration;
+	}
+	
+	@JsonProperty
+	public AuthConfig getAuthConfiguration() {
+		return authConfiguration;
 	}
 	
 	@JsonProperty("dbConfiguration")

@@ -17,14 +17,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import com.fasterxml.jackson.core.JsonFactory;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.wizardfingers.bic.model.LoginParams;
+import com.wizardfingers.bic.model.config.AuthConfig;
 
 /**
  * @author us
@@ -34,6 +32,12 @@ import com.wizardfingers.bic.model.LoginParams;
 @Produces(MediaType.TEXT_PLAIN)
 public class Login {
 
+	private AuthConfig authConfig;
+	
+	public Login(AuthConfig authConfig) {
+		this.authConfig = authConfig;
+	}
+	
 	@POST
 	@Path("/")
 	public String login( LoginParams login ) {
@@ -41,9 +45,7 @@ public class Login {
 		try {
 			
 			GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new JacksonFactory())
-			    .setAudience(Collections.singletonList("182014956757-0fr33eunhkaqekio6j3uct03bg4c1ut6.apps.googleusercontent.com"))
-			    // Or, if multiple clients access the backend:
-			    //.setAudience(Arrays.asList(CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3))
+			    .setAudience(Collections.singletonList( getAuthConfig().getClientId() ))
 			    .build();
 			
 			GoogleIdToken idToken = verifier.verify(login.getToken());
@@ -61,5 +63,9 @@ public class Login {
 		}
 
 		return "Failure!";
+	}
+	
+	private AuthConfig getAuthConfig() {
+		return this.authConfig;
 	}
 }
