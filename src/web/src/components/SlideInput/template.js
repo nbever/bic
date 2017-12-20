@@ -9,6 +9,7 @@ const template = `
     border-bottom: 1px solid lightgray;
     transition: 200ms;
     margin-top: 24px;
+    width: calc(100% - 16px);
   }
 
   input:focus {
@@ -41,10 +42,12 @@ const template = `
     font-size: 12px;
   }
 </style>
-<div style="position: relative;">
+<div style="position: relative;text-align: left;">
   <div class="top">{{placeholder}}</div>
-  <input />
-  <div class="undertow"></div>
+  <div style="position: relative;width: {{width}}">
+    <input />
+    <div class="undertow"></div>
+  </div>
 </div>
 `
 

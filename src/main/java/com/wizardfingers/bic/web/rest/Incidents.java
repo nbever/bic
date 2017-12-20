@@ -19,7 +19,9 @@ import javax.ws.rs.core.Response;
 
 import com.codahale.metrics.annotation.Timed;
 import com.wizardfingers.bic.model.Incident;
+import com.wizardfingers.bic.model.ROLE;
 import com.wizardfingers.bic.services.IncidentAPI;
+import com.wizardfingers.bic.web.auth.BICAuth;
 
 /**
  * @author us
@@ -35,6 +37,7 @@ public class Incidents {
 		this.incidentApi = api;
 	}
 	
+	@BICAuth(ROLE.TEACHER)
 	@GET
 	@Timed
 	public List<Incident> getIncidents() {
@@ -42,6 +45,7 @@ public class Incidents {
 		return incidents;
 	}
 	
+	@BICAuth(ROLE.TEACHER)
 	@POST
 	public Response createIncident(Incident incident) {
 		

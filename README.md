@@ -35,6 +35,7 @@ Parameters
 |Key|Default|Values|
 |---|-------|------|
 |graduatingClass|<thisYear>-<thisYear-4>|Can be a single year or a span like `2014-2017`|
+|searchString|*|Matches any portion of any of the names|
 
 #### Get a specific student
 

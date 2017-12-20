@@ -9,9 +9,13 @@
  */
 package com.wizardfingers.bic.services;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.mongojack.DBCursor;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
 
 import com.mongodb.DB;
 import com.wizardfingers.bic.model.ROLE;
@@ -37,14 +41,47 @@ public class StudentAPI extends BaseService<Student>{
 	protected Class<Student> getCollectionClassType() {
 
 		return Student.class;
-	}	
+	}
 	
-	public List<Student> getStudents() {
+	private Query[] buildMatchingQueries(String searchString) {
 		
-		DBCursor<Student> students = getDBWrapper().find().is("role.value", ROLE.STUDENT.name());
+		String[] searchStrings = searchString.split(" ");
+		List<Query> queryList = new ArrayList<Query>();
 		
+		for( String str : searchStrings ) {
+			
+			Pattern pattern = Pattern.compile(str);
+			queryList.add( DBQuery.regex( "firstName", pattern ) );
+			queryList.add( DBQuery.regex( "lastName", pattern ) );
+			queryList.add( DBQuery.regex( "middletName", pattern ) );
+		}
+		
+		Query[] queryArr = new Query[queryList.size()];
+		return queryList.toArray(queryArr);
+	}
+	
+	public List<Student> getStudents(Integer minGraduatingClass, Integer maxGraduatingClass, String searchString) {
+		
+		DBCursor<Student> students = getDBWrapper().find().is("role.value", ROLE.STUDENT.name())
+			.and(
+				DBQuery.or(buildMatchingQueries(searchString))
+			)
+			.lessThanEquals("graduatingClass", maxGraduatingClass)
+			.greaterThanEquals("graduatingClass", minGraduatingClass);
+
 		List<Student> results = convertCusrorToList(students);
 		return results;
+	}
+	
+	public Student getStudent( String id ) {
+		DBCursor<Student> student = getDBWrapper().find().is("_id", id);
+		List<Student> matches = student.toArray();
+		
+		if ( matches.size() > 0 ) {
+			return matches.get(0);
+		}
+		
+		return null;
 	}
 
 	/* (non-Javadoc)

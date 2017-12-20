@@ -20,7 +20,10 @@ module.exports = {
     contentBase: distDir,
     historyApiFallback: true,
     proxy: {
-      '/api': 'http://localhost:8008'
+      '/api': {
+        target: 'https://localhost:8443',
+        secure: false
+      }
     }
   },
   module: {
