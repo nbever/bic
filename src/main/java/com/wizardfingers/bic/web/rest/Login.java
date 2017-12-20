@@ -8,21 +8,21 @@
  */
 package com.wizardfingers.bic.web.rest;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.util.Collections;
-
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import org.apache.http.auth.AuthenticationException;
+import org.eclipse.jetty.http.HttpStatus;
 import com.wizardfingers.bic.model.LoginParams;
-import com.wizardfingers.bic.model.config.AuthConfig;
+import com.wizardfingers.bic.model.User;
+import com.wizardfingers.bic.web.filters.AuthorizationFilter;
+import com.wizardfingers.bic.web.auth.Authorizer;
 
 /**
  * @author us
@@ -32,40 +32,35 @@ import com.wizardfingers.bic.model.config.AuthConfig;
 @Produces(MediaType.TEXT_PLAIN)
 public class Login {
 
-	private AuthConfig authConfig;
+	private Authorizer authorizer;
 	
-	public Login(AuthConfig authConfig) {
-		this.authConfig = authConfig;
+	public Login( Authorizer authorizer ) {
+		this.authorizer = authorizer;
 	}
 	
 	@POST
 	@Path("/")
-	public String login( LoginParams login ) {
+	public String login( @Context HttpServletResponse response, LoginParams login ) {
 		
 		try {
+			User user = getAuthorizer().authenticateUser( login.getToken() );
 			
-			GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new JacksonFactory())
-			    .setAudience(Collections.singletonList( getAuthConfig().getClientId() ))
-			    .build();
-			
-			GoogleIdToken idToken = verifier.verify(login.getToken());
-			
-			if ( idToken != null ) {
-				return "YES!";
+			if ( user == null ) {
+				throw new AuthenticationException();
 			}
 			
-		} catch (GeneralSecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Cookie authCookie = new Cookie(AuthorizationFilter.BIC_AUTH_HEADER, login.getToken());
+			response.addCookie( authCookie );
+			
+		}
+		catch( Exception authException ) {
+			throw new WebApplicationException("Authentication Failed", HttpStatus.UNAUTHORIZED_401);
 		}
 
-		return "Failure!";
+		return "YES!";
 	}
 	
-	private AuthConfig getAuthConfig() {
-		return this.authConfig;
+	private Authorizer getAuthorizer() {
+		return this.authorizer;
 	}
 }

@@ -3,6 +3,8 @@ import MainTabs from './MainTabs';
 import AlertBar from './components/AlertBar';
 import isNil from 'lodash/isNil';
 
+import RadioButton from './components/RadioButton';
+
 class AppFrame extends BaseElement {
 
   get template() {
@@ -126,6 +128,26 @@ class AppFrame extends BaseElement {
               <div class="google-text-block">Sign in with Google</div>
             </div>
           </div>
+          <radio-button-group>
+            <radio-button accent-color=${this.StyleService.accentColor}
+              text-color="white"
+              text="GroupMe"
+              value="number1">
+            </radio-button>
+            <radio-button accent-color=${this.StyleService.accentColor}
+              text-color="white"
+              text="GroupMe2"
+              value="number2">
+            </radio-button>
+          </radio-button-group>
+          <slide-checkbox accent-color=${this.StyleService.accentColor} text-color="white">
+            Check Me!
+          </slide-checkbox>
+          <slide-input placeholder="Cool" width="204px">
+          </slide-input>
+          <slide-spinner accent-color=${this.StyleService.accentColor} text-color="white" placeholder="Number">
+          </slide-spinner>
+          <slide-calendar accent-color=${this.StyleService.accentColor} text-color="white"></slide-calendar>
         </div>
         <div class="main-content hide">
           <alert-bar></alert-bar>
@@ -208,4 +230,4 @@ class AppFrame extends BaseElement {
   };
 }
 
-export default registerElement('AuthorizationService')(AppFrame);
+export default registerElement('AuthorizationService', 'StyleService')(AppFrame);

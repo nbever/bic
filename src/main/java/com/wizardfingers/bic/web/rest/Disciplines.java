@@ -19,7 +19,9 @@ import javax.ws.rs.core.Response;
 
 import com.codahale.metrics.annotation.Timed;
 import com.wizardfingers.bic.model.Discipline;
+import com.wizardfingers.bic.model.ROLE;
 import com.wizardfingers.bic.services.DisciplineConfigAPI;
+import com.wizardfingers.bic.web.auth.BICAuth;
 
 /**
  * @author us
@@ -35,6 +37,7 @@ public class Disciplines {
 		this.disciplineApi = api;
 	}
 	
+	@BICAuth(ROLE.ADMIN)
 	@GET
 	@Timed
 	public List<Discipline> getDisciplines() {
@@ -43,6 +46,7 @@ public class Disciplines {
 		return disciplines;
 	}
 	
+	@BICAuth(ROLE.ADMIN)
 	@POST
 	@Timed
 	public Response createDiscipline(Discipline discipline) {

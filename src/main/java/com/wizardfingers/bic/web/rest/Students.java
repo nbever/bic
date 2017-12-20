@@ -23,8 +23,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.annotation.Timed;
+import com.wizardfingers.bic.model.ROLE;
 import com.wizardfingers.bic.model.Student;
 import com.wizardfingers.bic.services.StudentAPI;
+import com.wizardfingers.bic.web.auth.BICAuth;
 
 @Path("/students")
 @Produces(MediaType.APPLICATION_JSON)
@@ -37,6 +39,7 @@ public class Students {
 		this.studentApi = studentApi;
 	}
 	
+	@BICAuth(ROLE.STUDENT)
 	@GET
 	@Timed
 	@Path("/{id}")
@@ -47,6 +50,7 @@ public class Students {
 		return student;
 	}
 	
+	@BICAuth(ROLE.TEACHER)
 	@GET
 	@Timed
 	public List<Student> getStudents(@QueryParam("graduatingClass") String graduatingClass, @QueryParam("searchString") String searchString) {
@@ -81,6 +85,7 @@ public class Students {
 		return users;
 	}
 	
+	@BICAuth(ROLE.ADMIN)
 	@POST
 	@Timed
 	public Response createStudent(Student student) {

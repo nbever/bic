@@ -18,6 +18,7 @@ public class AuthConfig {
 
 	private String clientId;
 	private String clientSecret;
+	private Long reauthPeriodInMinutes;
 	
 	@JsonProperty
 	public String getClientId() {
@@ -27,5 +28,10 @@ public class AuthConfig {
 	@JsonProperty
 	public String getClientSecret() {
 		return this.clientSecret;
+	}
+	
+	@JsonProperty
+	public Long reauthPeriodInMinutes() {
+		return this.reauthPeriodInMinutes;
 	}
 }
