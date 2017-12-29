@@ -128,7 +128,7 @@ class AppFrame extends BaseElement {
               <div class="google-text-block">Sign in with Google</div>
             </div>
           </div>
-          <radio-button-group>
+          <!--<radio-button-group>
             <radio-button accent-color=${this.StyleService.accentColor}
               text-color="white"
               text="GroupMe"
@@ -142,12 +142,13 @@ class AppFrame extends BaseElement {
           </radio-button-group>
           <slide-checkbox accent-color=${this.StyleService.accentColor} text-color="white">
             Check Me!
-          </slide-checkbox>
+          </slide-checkbox>-->
+          <slide-time-picker accent-color=${this.StyleService.accentColor} placeholder="Time"></slide-time-picker>
           <slide-input placeholder="Cool" width="204px">
           </slide-input>
-          <slide-spinner accent-color=${this.StyleService.accentColor} text-color="white" placeholder="Number">
+          <!--<slide-spinner accent-color=${this.StyleService.accentColor} text-color="white" placeholder="Number">
           </slide-spinner>
-          <slide-calendar accent-color=${this.StyleService.accentColor} text-color="white"></slide-calendar>
+          <slide-calendar accent-color=${this.StyleService.accentColor} text-color="white"></slide-calendar>-->
         </div>
         <div class="main-content hide">
           <alert-bar></alert-bar>

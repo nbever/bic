@@ -104,7 +104,7 @@ class SlideSpinner extends BaseElement {
         <div style="position: relative;">
           <div class="input-section">
             <input />
-            <div class="button-parent off">
+            <div class="button-parent">
               <div class="up button">
                 <div class="up-triangle"></div>
               </div>
@@ -171,16 +171,30 @@ class SlideSpinner extends BaseElement {
     return this._top;
   }
 
+  get showButtons() {
+    return this._showButtons;
+  }
+
+  set showButtons(shouldI) {
+    this._showButtons = JSON.parse(shouldI);
+  }
+
   setDefaults() {
     this._step = 1;
     this._min = 0;
     this._max = 999999;
     this._value = 0;
+    this._showButtons = true;
   }
 
   connectedCallback() {
     super.connectedCallback();
     this.setWidth();
+
+    if (this.showButtons === false) {
+      this.addClass(this.find('.button-parent'), 'off');
+      this.addClass(this.find('.undertow', 'off'));
+    }
   }
 
   setWidth = () => {
@@ -264,7 +278,6 @@ class SlideSpinner extends BaseElement {
         this.value = parseInt(this.input.value);
       }
     }, 50);
-    // this.value = parseInt(this.input.value + '' + $event.key);
   }
 
   fieldUnfocused = ($event) => {
@@ -292,7 +305,10 @@ class SlideSpinner extends BaseElement {
     this.addClass(this.undertow, 'on');
     this.addClass(this.input, 'input-focus');
     this.addClass(this.top, 'on');
-    this.removeClass(this.find('.button-parent'), 'off');
+
+    if ( this.showButtons === true ) {
+      this.removeClass(this.find('.button-parent'), 'off');
+    }
 
     document.addEventListener('click', this.fieldUnfocused);
   }
