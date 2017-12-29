@@ -15,6 +15,7 @@ import com.wizardfingers.bic.services.UserAPI;
 import com.wizardfingers.bic.web.auth.Authorizer;
 import com.wizardfingers.bic.web.filters.AuthorizationFeature;
 import com.wizardfingers.bic.web.health.BasicHealthCheck;
+import com.wizardfingers.bic.web.rest.Configuration;
 import com.wizardfingers.bic.web.rest.Login;
 import com.wizardfingers.bic.web.rest.Students;
 
@@ -48,11 +49,13 @@ public class BICApplication extends Application<BICConfiguration>{
 		
 		Students studentResource = new Students(studentApi);
 		Login login = new Login( authorizer );
+		Configuration configResource = new Configuration( config.getModeConfiguration() );
 		
 		env.healthChecks().register("Basic", new BasicHealthCheck());
 		env.jersey().register( authFeature );
 		env.jersey().register(studentResource);
 		env.jersey().register(login);
+		env.jersey().register(configResource);
 		
 	}
 

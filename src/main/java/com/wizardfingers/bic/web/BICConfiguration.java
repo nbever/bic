@@ -14,6 +14,7 @@ import com.wizardfingers.bic.db.MongoClientFactory;
 import com.wizardfingers.bic.model.config.AuthConfig;
 import com.wizardfingers.bic.model.config.BackupConfig;
 import com.wizardfingers.bic.model.config.EmailConfig;
+import com.wizardfingers.bic.model.config.ModeConfig;
 
 import io.dropwizard.Configuration;
 
@@ -22,6 +23,7 @@ public class BICConfiguration extends Configuration {
 	private BackupConfig backupConfiguration;
 	private EmailConfig emailConfiguration;
 	private AuthConfig authConfiguration;
+	private ModeConfig modeConfiguration;
 
 	private MongoClientFactory mongoConnectionFactory = new MongoClientFactory();
 	
@@ -48,5 +50,15 @@ public class BICConfiguration extends Configuration {
 	@JsonProperty("dbConfiguration")
 	public void setMongoClientFactory(MongoClientFactory factory) {
 		this.mongoConnectionFactory = factory;
+	}
+	
+	@JsonProperty("modeConfiguration")
+	public ModeConfig getModeConfiguration() {
+		return this.modeConfiguration;
+	}
+	
+	@JsonProperty("modeConfiguration")
+	public void setModeConfiguration(ModeConfig config) {
+		this.modeConfiguration = config;
 	}
 }

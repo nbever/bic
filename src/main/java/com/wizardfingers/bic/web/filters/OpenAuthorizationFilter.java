@@ -6,18 +6,21 @@
  * this file. If not, please write to: bever.nate@gmail.com, 
  * or visit: https://github.com/nbever/bic/LICENSE.md
  */
-package com.wizardfingers.bic.web.auth;
+package com.wizardfingers.bic.web.filters;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
-import com.wizardfingers.bic.model.ROLE;
+import com.wizardfingers.bic.web.auth.Authorizer;
 
 /**
  * @author us
  *
  */
-@Retention(value=RetentionPolicy.RUNTIME)
-public @interface BICAuth {
-	ROLE value();
+public class OpenAuthorizationFilter extends AuthorizationFilter {
+
+	/**
+	 * @param authorizer
+	 */
+	protected OpenAuthorizationFilter(Authorizer authorizer) {
+		super(authorizer);
+	}
+
 }

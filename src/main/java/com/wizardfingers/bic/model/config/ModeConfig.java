@@ -6,18 +6,22 @@
  * this file. If not, please write to: bever.nate@gmail.com, 
  * or visit: https://github.com/nbever/bic/LICENSE.md
  */
-package com.wizardfingers.bic.web.auth;
+package com.wizardfingers.bic.model.config;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
-import com.wizardfingers.bic.model.ROLE;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author us
  *
  */
-@Retention(value=RetentionPolicy.RUNTIME)
-public @interface BICAuth {
-	ROLE value();
+public class ModeConfig {
+
+	public enum MODE { OPEN, CLOSED };
+	
+	private MODE mode;
+	
+	@JsonProperty
+	public MODE getMode() {
+		return this.mode;
+	}
 }

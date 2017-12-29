@@ -52,6 +52,8 @@ public class AuthorizationFeature implements DynamicFeature{
 				case TEACHER:
 					authFilter = new TeacherAuthorizationFilter( getAuthorizer() );
 					break;
+				case OPEN:
+					authFilter = new OpenAuthorizationFilter( getAuthorizer() );
 				default: 
 					authFilter = new StudentAuthorizationFilter( getAuthorizer() );
 			}

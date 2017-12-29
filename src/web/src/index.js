@@ -1,8 +1,6 @@
 import isUndefined from 'lodash/isUndefined';
 import { ServiceRegistry } from 'single-malt';
 
-import BeverageService from './services/BeverageService';
-import FoodService from './services/FoodService';
 import AuthorizationService from './services/AuthorizationService';
 import StyleService from './services/StyleService';
 
@@ -22,9 +20,7 @@ import SlideDropDown from './components/SlideDropDown';
 // setup services
 ServiceRegistry.register(
   AuthorizationService,
-  StyleService,
-  BeverageService,
-  FoodService);
+  StyleService);
 
 const AppFrame = require('./AppFrame');
 
