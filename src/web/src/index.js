@@ -17,6 +17,7 @@ import SlideCheckbox from './components/SlideCheckbox';
 import SlideCalendar from './components/SlideCalendar';
 import SlideSpinner from './components/SlideSpinner';
 import SlideTimePicker from './components/SlideTimePicker';
+import SlideDropDown from './components/SlideDropDown';
 
 // setup services
 ServiceRegistry.register(

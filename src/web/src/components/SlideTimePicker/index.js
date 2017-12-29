@@ -27,6 +27,10 @@ class SlideTimePicker extends BaseElement {
           color: {{ textColor }};
         }
 
+        #hour-spinner {
+          padding-left: 10px;
+        }
+
         .am-spinner {
           flex-grow: 1;
         }
@@ -71,7 +75,7 @@ class SlideTimePicker extends BaseElement {
         }
 
         .slide-time-picker {
-          width: 105px;
+          width: 113px;
         }
 
         span {
