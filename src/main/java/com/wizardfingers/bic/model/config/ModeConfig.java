@@ -19,9 +19,18 @@ public class ModeConfig {
 	public enum MODE { OPEN, CLOSED };
 	
 	private MODE mode;
+	private String email;
 	
 	@JsonProperty
 	public MODE getMode() {
 		return this.mode;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+	
+	public void setEmail(String anEmail) {
+		this.email = anEmail;
 	}
 }

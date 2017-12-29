@@ -44,7 +44,7 @@ public class BICApplication extends Application<BICConfiguration>{
 		StudentAPI studentApi = new StudentAPI(mongoClient);
 		UserAPI userApi = new UserAPI(mongoClient);
 		
-		Authorizer authorizer = new Authorizer( config.getAuthConfiguration(), userApi );
+		Authorizer authorizer = new Authorizer( config.getAuthConfiguration(), config.getModeConfiguration(), userApi );
 		AuthorizationFeature authFeature = new AuthorizationFeature( authorizer );
 		
 		Students studentResource = new Students(studentApi);
