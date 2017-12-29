@@ -1,8 +1,13 @@
 import { BaseElement, registerElement } from 'single-malt';
 
 import isNil from 'lodash/isNil';
+import filter from 'lodash/filter';
+import forOwn from 'lodash/forOwn';
 
 class SlideDropDown extends BaseElement {
+
+  static AUTO_COMPLETE =  1;
+  static STANDARD = 0;
 
   get template() {
     const template = `
@@ -63,13 +68,17 @@ class SlideDropDown extends BaseElement {
         border: 0px;
         height: 0px;
         text-align: left;
-        overflow: hidden;
+        overflow: auto;
         transition: 200ms;
         background-color: white;
+        position: absolute;
+        width: 100%;
+        z-index: 2;
+        top: 60px;
       }
 
       .choices.on {
-        height: 48px;
+        max-height: 192px;
         border: 1px solid lightgray;
         border-bottom: 4px solid {{ accentColor }};
       }
@@ -102,9 +111,7 @@ class SlideDropDown extends BaseElement {
     <div id="slide-dropdown" class="slide-drop-down">
       <div id="top2" class="top">{{ placeholder }}</div>
       <input id="select"/>
-      <div class="choices" id="undertow2">
-        <div class="option">Apple</div>
-        <div class="option">Orange</div>
+      <div class="choices">
       </div>
       <div id="dd-arrow" class="arrow">
         &#9660;
@@ -118,10 +125,19 @@ class SlideDropDown extends BaseElement {
     this._accentColor = 'black';
     this._textColor = 'white';
     this._selectedIndex = 0;
+    this._mode = SlideDropDown.STANDARD;
   }
 
   connectedCallback() {
     super.connectedCallback();
+  }
+
+  get mode() {
+    return this._mode;
+  }
+
+  set mode(aMode) {
+    this._mode = aMode;
   }
 
   get accentColor() {
@@ -148,6 +164,14 @@ class SlideDropDown extends BaseElement {
     return this._inputField;
   }
 
+  get dropdown() {
+    if (isNil(this._dropdown)) {
+      this._dropdown = this.find('.choices');
+    }
+
+    return this._dropdown;
+  }
+
   get selectedIndex() {
     return this._selectedIndex;
   }
@@ -157,7 +181,7 @@ class SlideDropDown extends BaseElement {
   }
 
   get selectedOption() {
-    return this._options[this.selectedIndex];
+    return this._options[this.find('.option')[this.selectedIndex].dataset.value];
   }
 
   get options() {
@@ -165,24 +189,40 @@ class SlideDropDown extends BaseElement {
   }
 
   set options(someOptions) {
-    this._options = someOptions;
+    this._options = {};
 
     this.clearOptionHandlers();
 
-    const parent = this.find('.choices');
     this.findAll('.option').forEach((o) => {
-      parent.removeChild(o);
+      this.dropdown.removeChild(o);
     });
 
-    this._options.forEach( (newO) => {
-      const elem = document.createElement('div');
-      elem.className = 'choices';
-      elem.dataset.value = newO.value;
-      elem.appendChild(document.createTextNode(newO.displayText));
-      parent.appendChild(elem);
+    someOptions.forEach( (newO) => {
+      this._options[newO.value] = newO;
+      this.addOptionToDom(newO);
     });
 
     this.addOptionHandlers();
+  }
+
+  addOptionToDom = (option) => {
+    const elem = document.createElement('div');
+    elem.className = 'option';
+    elem.dataset.value = option.value;
+    elem.appendChild(document.createTextNode(option.displayText));
+    this.dropdown.appendChild(elem);
+  }
+
+  get isPresecribed() {
+    this._isPrescribed;
+  }
+
+  sanitizeField() {
+    this._isPrescribed = true;
+  }
+
+  dirtyField() {
+    this._isPrescribed = false;
   }
 
   addEventListeners = () => {
@@ -190,6 +230,7 @@ class SlideDropDown extends BaseElement {
     this.inputField.addEventListener('click', this.openDrawer);
     this.find('#dd-arrow').addEventListener('click', this.openDrawer);
     this.inputField.addEventListener('keydown', this.stopTyping);
+    this.inputField.addEventListener('keyup', this.filter);
     this.addOptionHandlers();
   }
 
@@ -198,6 +239,8 @@ class SlideDropDown extends BaseElement {
     this.inputField.removeEventListener('click', this.openDrawer);
     this.find('#dd-arrow').removeEventListener('click', this.openDrawer);
     this.inputField.removeEventListener('keydown', this.stopTyping);
+    this.inputField.removeEventListener('keyup', this.filter);
+
     this.clearOptionHandlers();
   }
 
@@ -219,6 +262,7 @@ class SlideDropDown extends BaseElement {
 
   optionChosen = ($event) => {
     this.inputField.value = $event.srcElement.textContent;
+    this.sanitizeField();
   }
 
   optionHovered = ($event) => {
@@ -249,7 +293,7 @@ class SlideDropDown extends BaseElement {
 
     if ($event.keyCode === 13) {
 
-      if (this.find('.choices').className.indexOf('on') === -1) {
+      if (this.dropdown.className.indexOf('on') === -1) {
         this.openDrawer($event);
       }
       else {
@@ -280,8 +324,48 @@ class SlideDropDown extends BaseElement {
       return;
     }
 
-    $event.preventDefault();
-    $event.stopPropagation();
+    if (this.mode !== SlideDropDown.AUTO_COMPLETE) {
+      $event.preventDefault();
+      $event.stopPropagation();
+    }
+    else {
+      if (this.isPresecribed) {
+        this.inputField.value = '';
+        this.dirtyField();
+      }
+    }
+  }
+
+  filter = ($event) => {
+    if (this.mode !== SlideDropDown.AUTO_COMPLETE ||
+      $event.keyCode < 48 || $event.keyCode > 90) {
+      return;
+    }
+
+    this.clearOptionHandlers();
+
+    this.findAll('.option').forEach((o) => {
+      this.dropdown.removeChild(o);
+    });
+
+    forOwn(this.options, (o) => {
+      const text = this.inputField.value.trim().toLowerCase();
+      if (o.displayText.trim().toLowerCase().indexOf(text) === -1) {
+        return;
+      }
+
+      this.addOptionToDom(o);
+    });
+
+    this.addOptionHandlers();
+    this.setDrawerHeight();
+  }
+
+  setDrawerHeight = () => {
+    // find the height of the drawer
+    const keys = this.findAll('.option').length;
+    const height = keys > 8 ? 8 * 24 : keys * 24;
+    this.dropdown.style.height = `${height}px`;
   }
 
   openDrawer = ($event) => {
@@ -289,12 +373,13 @@ class SlideDropDown extends BaseElement {
       document.addEventListener('click', this.closeDrawer);
     }, 500);
 
-    if (this.find('.choices').className.indexOf('on') !== -1) {
+    if (this.dropdown.className.indexOf('on') !== -1) {
       this.closeDrawer($event);
       return;
     }
 
-    this.addClass(this.find('.choices'), 'on');
+    this.addClass(this.dropdown, 'on');
+    this.setDrawerHeight();
   }
 
   closeDrawer = ($event) => {
@@ -304,7 +389,8 @@ class SlideDropDown extends BaseElement {
       this.inputField.value = $event.path[0].textContent;
     }
 
-		this.removeClass(this.find('.choices'), 'on');
+		this.removeClass(this.dropdown, 'on');
+    this.dropdown.style.height = '0px';
 
     if (this.inputField.value === '') {
     	this.removeClass(this.find('.top'), 'on');

@@ -4,6 +4,8 @@ import AlertBar from './components/AlertBar';
 import isNil from 'lodash/isNil';
 
 import RadioButton from './components/RadioButton';
+import Option from './components/SlideDropDown/Option';
+import SlideDropDown from './components/SlideDropDown';
 
 class AppFrame extends BaseElement {
 
@@ -128,7 +130,7 @@ class AppFrame extends BaseElement {
               <div class="google-text-block">Sign in with Google</div>
             </div>
           </div>
-          <slide-drop-down placeholder="Selection"></slide-drop-down>
+          <slide-drop-down accent-color=${this.StyleService.accentColor} placeholder="Selection"></slide-drop-down>
           <slide-time-picker accent-color=${this.StyleService.accentColor} placeholder="Time"></slide-time-picker>
           <slide-input placeholder="Cool" width="204px">
           </slide-input>
@@ -150,6 +152,17 @@ class AppFrame extends BaseElement {
     this.AuthorizationService.registerForChanges(this);
 
     this.AuthorizationService.loggedin;
+
+    const sdd = this.find('slide-drop-down');
+    const options = [
+      new Option(8, 'Apple'),
+      new Option(1, 'Orange'),
+      new Option(10, 'Grape'),
+      new Option(2, 'Watermelon'),
+    ];
+
+    sdd.options = options;
+    sdd.mode = SlideDropDown.AUTO_COMPLETE;
   }
 
   addEventListeners() {
