@@ -2,7 +2,7 @@ import template from './template';
 
 import { BaseElement, registerElement } from 'single-malt';
 
-class BoringPage extends BaseElement {
+class StudentPage extends BaseElement {
   get template() {
     return template;
   }
@@ -23,4 +23,4 @@ class BoringPage extends BaseElement {
   }
 }
 
-export default registerElement('BeverageService')(BoringPage);
+export default registerElement()(StudentPage);

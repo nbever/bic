@@ -62,6 +62,7 @@ class SlideDropDown extends BaseElement {
 
       #select {
         cursor: pointer;
+        width: {{ width }};
       }
 
       .choices {
@@ -106,6 +107,7 @@ class SlideDropDown extends BaseElement {
         display: table;
         position: relative;
         margin: 4px;
+        width: {{ width }}
       }
     </style>
     <div id="slide-dropdown" class="slide-drop-down">
@@ -181,7 +183,7 @@ class SlideDropDown extends BaseElement {
   }
 
   get selectedOption() {
-    return this._options[this.find('.option')[this.selectedIndex].dataset.value];
+    return this._selectedOption;
   }
 
   get options() {
@@ -262,6 +264,7 @@ class SlideDropDown extends BaseElement {
 
   optionChosen = ($event) => {
     this.inputField.value = $event.srcElement.textContent;
+    this._selectedOption = this._options[this.findAll('.option')[this.selectedIndex].dataset.value];
     this.sanitizeField();
   }
 

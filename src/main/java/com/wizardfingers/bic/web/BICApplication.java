@@ -18,6 +18,7 @@ import com.wizardfingers.bic.web.health.BasicHealthCheck;
 import com.wizardfingers.bic.web.rest.Configuration;
 import com.wizardfingers.bic.web.rest.Login;
 import com.wizardfingers.bic.web.rest.Students;
+import com.wizardfingers.bic.web.rest.Users;
 
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
@@ -46,13 +47,15 @@ public class BICApplication extends Application<BICConfiguration>{
 		
 		Authorizer authorizer = new Authorizer( config.getAuthConfiguration(), config.getModeConfiguration(), userApi );
 		AuthorizationFeature authFeature = new AuthorizationFeature( authorizer );
-		
+
+		Users userResource = new Users(userApi);
 		Students studentResource = new Students(studentApi);
 		Login login = new Login( authorizer );
-		Configuration configResource = new Configuration( config.getModeConfiguration() );
+		Configuration configResource = new Configuration( config.getModeConfiguration(), userApi );
 		
 		env.healthChecks().register("Basic", new BasicHealthCheck());
 		env.jersey().register( authFeature );
+		env.jersey().register(userResource);
 		env.jersey().register(studentResource);
 		env.jersey().register(login);
 		env.jersey().register(configResource);

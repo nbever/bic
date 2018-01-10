@@ -11,16 +11,20 @@ package com.wizardfingers.bic.web.rest;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.http.client.HttpResponseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.annotation.Timed;
 import com.wizardfingers.bic.model.ROLE;
+import com.wizardfingers.bic.model.User;
 import com.wizardfingers.bic.model.config.ModeConfig;
+import com.wizardfingers.bic.services.UserAPI;
 import com.wizardfingers.bic.web.auth.BICAuth;
 
 /**
@@ -33,9 +37,11 @@ public class Configuration {
 
 	final static Logger logger = LoggerFactory.getLogger(Configuration.class);
 	private ModeConfig modeConfiguration;
+	private UserAPI userApi;
 	
-	public Configuration( ModeConfig modeConfiguration ) {
+	public Configuration( ModeConfig modeConfiguration, UserAPI userApi ) {
 		this.modeConfiguration = modeConfiguration;
+		this.userApi = userApi;
 	}
 	
 	@BICAuth(ROLE.OPEN)
@@ -49,16 +55,21 @@ public class Configuration {
 	@BICAuth(ROLE.OPEN)
 	@POST
 	@Timed
-	@Path("use_email")
-	public Response setEmail(String email) {
+	@Path("impersonate/{id}")
+	public User impersonate(@PathParam("id") String id) throws HttpResponseException {
 		
 		if ( !getModeConfiguration().getMode().equals(ModeConfig.MODE.OPEN) ) {
-		  return Response.status(Response.Status.FORBIDDEN).type("text/plain").entity("This method is not allowed while running in closed mode.").build();
+		  throw new HttpResponseException(Response.Status.FORBIDDEN.getStatusCode(), "This method is not allowed while running in closed mode.");
 		}
 		
-		logger.warn("Setting user to: " + email);
-		getModeConfiguration().setEmail( email );
+		User user = this.getUserApi().getUserById(id);
+		logger.warn("Setting user to: " + user.getEmail());
+		getModeConfiguration().setEmail( user.getEmail());
 		
-		return Response.status(Response.Status.OK).type("text/plain").entity("OK").build();
+		return user;
+	}
+	
+	private UserAPI getUserApi() {
+		return this.userApi;
 	}
 }

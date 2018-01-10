@@ -12,7 +12,7 @@ const template = `
     }
 
     ::slotted(a.selected) {
-      color: green;
+      color: green !important;
     }
   </style>
   <div class="tab-bar-container">

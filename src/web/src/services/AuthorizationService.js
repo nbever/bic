@@ -68,6 +68,10 @@ class AuthorizationService {
     return this._isLoggedIn;
   };
 
+  get user() {
+    return this._user;
+  }
+
   get listeners() {
 
     if (isNil(this._listeners)) {
@@ -104,10 +108,31 @@ class AuthorizationService {
 
     this._isLoggedIn = isSignedIn;
 
-    if (isSignedIn) {
+    if (isSignedIn && this._openMode !== true) {
       this._getToken();
     }
   }
+
+  _impersonate = (user) => {
+    const userPromise = new Promise( (resolve, reject) => {
+      fetch(`/api/config/impersonate/${user._value}`,
+        {
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        })
+        .then( response => {
+          response.json().then(json => {
+            this._user = json;
+            resolve(this._user);
+          });
+        });
+    });
+
+    return userPromise;
+  };
 
   _getToken = () => {
 

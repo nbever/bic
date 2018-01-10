@@ -10,12 +10,14 @@ package com.wizardfingers.bic.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wizardfingers.bic.model.serializers.JsonDateDeserializer;
 import com.wizardfingers.bic.model.serializers.JsonDateSerializer;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User extends BaseObject{
 
 	private String firstName;

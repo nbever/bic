@@ -3,24 +3,31 @@ import { ServiceRegistry } from 'single-malt';
 
 import AuthorizationService from './services/AuthorizationService';
 import StyleService from './services/StyleService';
+import ModalService from './services/ModalService';
+import UserService from './services/UserService';
 
 // load widgets
-import ListBuilder from './components/ListBuilder';
-import TabBar from './components/TabBar';
-import SlideInput from './components/SlideInput';
-import AlertBar from './components/AlertBar';
-import RadioButton from './components/RadioButton';
-import RadioButtonGroup from './components/RadioButtonGroup';
-import SlideCheckbox from './components/SlideCheckbox';
-import SlideCalendar from './components/SlideCalendar';
-import SlideSpinner from './components/SlideSpinner';
-import SlideTimePicker from './components/SlideTimePicker';
-import SlideDropDown from './components/SlideDropDown';
+// import ListBuilder from './components/ListBuilder';
+// import TabBar from './components/TabBar';
+// import SlideInput from './components/SlideInput';
+// import AlertBar from './components/AlertBar';
+// import RadioButton from './components/RadioButton';
+// import RadioButtonGroup from './components/RadioButtonGroup';
+// import SlideCheckbox from './components/SlideCheckbox';
+// import SlideCalendar from './components/SlideCalendar';
+// import SlideSpinner from './components/SlideSpinner';
+// import SlideTimePicker from './components/SlideTimePicker';
+// import SlideDropDown from './components/SlideDropDown';
+// import BicModal from './components/Modal';
+// import SlideButton from './components/SlideButton';
 
 // setup services
 ServiceRegistry.register(
   AuthorizationService,
-  StyleService);
+  UserService,
+  StyleService,
+  ModalService
+);
 
 const AppFrame = require('./AppFrame');
 
