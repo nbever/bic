@@ -1,9 +1,10 @@
 const template = `
   <div>
     I'm the overview!
-    <span>
+    <div>
       <list-builder placeholder="Freedom"/>
-    </span>
+    </div>
+    <slide-button>Show Dialog</slide-button>
   </div>
 `;
 

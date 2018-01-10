@@ -22,6 +22,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.wizardfingers.bic.model.User;
 import com.wizardfingers.bic.model.config.AuthConfig;
+import com.wizardfingers.bic.model.config.ModeConfig;
 import com.wizardfingers.bic.services.UserAPI;
 
 /**
@@ -34,10 +35,12 @@ public class Authorizer {
 	private GoogleIdTokenVerifier verifier;
 	
 	private final AuthConfig authConfig;
+	private final ModeConfig modeConfig;
 	private final UserAPI userApi;
 	
-	public Authorizer( AuthConfig authenticationConfig, UserAPI userApi ) {
+	public Authorizer( AuthConfig authenticationConfig, ModeConfig modeConfiguration, UserAPI userApi ) {
 		this.authConfig = authenticationConfig;
+		this.modeConfig = modeConfiguration;
 		this.userApi = userApi;
 	}
 	
@@ -53,14 +56,22 @@ public class Authorizer {
 	private User doGoogleAuth( String token ) throws AuthenticationException {
 		
 		try {
-			GoogleIdToken idToken = getVerifier().verify( token );
 			
-			if ( idToken == null ) {
-				throw new AuthenticationException();
+			String email = "";
+			
+			if ( getModeConfig().getMode().equals( ModeConfig.MODE.OPEN )) {
+				email = getModeConfig().getEmail();
 			}
-			
-			Payload payload = idToken.getPayload();
-			String email = payload.getEmail();
+			else {
+				GoogleIdToken idToken = getVerifier().verify( token );
+				
+				if ( idToken == null ) {
+					throw new AuthenticationException();
+				}
+				
+				Payload payload = idToken.getPayload();
+				email = payload.getEmail();
+			}
 			
 			User user = getUserApi().getUserByLogin( email );
 			
@@ -94,6 +105,10 @@ public class Authorizer {
 	
 	private AuthConfig getAuthConfig() {
 		return authConfig;
+	}
+	
+	private ModeConfig getModeConfig() {
+		return modeConfig;
 	}
 	
 	private GoogleIdTokenVerifier getVerifier() {

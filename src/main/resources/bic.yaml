@@ -28,3 +28,6 @@ authConfiguration:
   clientId: 182014956757-0fr33eunhkaqekio6j3uct03bg4c1ut6.apps.googleusercontent.com
   clientSecret: tlpqYPNIm9Tp1A1WDdeEiSx2
   reauthPeriodInMinutes: 15
+
+modeConfiguration:
+  mode: OPEN

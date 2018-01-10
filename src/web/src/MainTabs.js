@@ -1,6 +1,7 @@
 import TabBar from './components/TabBar';
 import OverviewPage from './pages/OverviewPage';
-import BoringPage from './pages/BoringPage';
+import StudentPage from './pages/StudentPage';
+import IncidentPage from './pages/IncidentPage';
 
 import { Router, BaseElement, registerElement } from 'single-malt';
 
@@ -15,16 +16,20 @@ class MainTabs extends BaseElement {
       </style>
       <div>
         <tab-bar>
-          <a data-url="/overview">Overview</a>
-          <a data-url="/boring">Boring</a>
-          <a data-url="/admin">Admin</a>
+          <a data-url="/student">Student</a>
+          <a data-url="/incident">Incident</a>
         </tab-bar>
         <wc-router>
-          <wc-route persist path="/overview" page="overview-page"></wc-route>
-          <wc-route persist path="/boring" page="boring-page"></wc-route>
+          <wc-route persist path="/student" page="student-page"></wc-route>
+          <wc-route persist path="/incident" page="incident-page"></wc-route>
         </wc-router>
       </div>
     `;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.find('a').click();
   }
 
   navigate($event) {

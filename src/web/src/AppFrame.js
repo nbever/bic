@@ -3,7 +3,11 @@ import MainTabs from './MainTabs';
 import AlertBar from './components/AlertBar';
 import isNil from 'lodash/isNil';
 
+import ImpersonateDialog from './dialogs/ImpersonateDialog';
 import RadioButton from './components/RadioButton';
+import Option from './components/SlideDropDown/Option';
+import SlideDropDown from './components/SlideDropDown';
+import BicModal from './components/Modal';
 
 class AppFrame extends BaseElement {
 
@@ -13,6 +17,12 @@ class AppFrame extends BaseElement {
         div {
           color: #525252;
           font-family: "optimusprincepsregular";
+        }
+
+        button {
+          border: none;
+          background-color: #A53446;
+          color: white;
         }
 
         .app {
@@ -114,7 +124,7 @@ class AppFrame extends BaseElement {
           <div class="top-container">
             <div class="title">Sandpoint BIC</div>
             <div class="login">
-              <div>Nate</div>
+              <div id="user-name">Nate</div>
               <a class="logout">Logout</a>
             </div>
           </div>
@@ -128,27 +138,6 @@ class AppFrame extends BaseElement {
               <div class="google-text-block">Sign in with Google</div>
             </div>
           </div>
-          <!--<radio-button-group>
-            <radio-button accent-color=${this.StyleService.accentColor}
-              text-color="white"
-              text="GroupMe"
-              value="number1">
-            </radio-button>
-            <radio-button accent-color=${this.StyleService.accentColor}
-              text-color="white"
-              text="GroupMe2"
-              value="number2">
-            </radio-button>
-          </radio-button-group>
-          <slide-checkbox accent-color=${this.StyleService.accentColor} text-color="white">
-            Check Me!
-          </slide-checkbox>-->
-          <slide-time-picker accent-color=${this.StyleService.accentColor} placeholder="Time"></slide-time-picker>
-          <slide-input placeholder="Cool" width="204px">
-          </slide-input>
-          <!--<slide-spinner accent-color=${this.StyleService.accentColor} text-color="white" placeholder="Number">
-          </slide-spinner>
-          <slide-calendar accent-color=${this.StyleService.accentColor} text-color="white"></slide-calendar>-->
         </div>
         <div class="main-content hide">
           <alert-bar></alert-bar>
@@ -156,6 +145,7 @@ class AppFrame extends BaseElement {
           <span class="content">
           </span>
         </div>
+        <bic-modal></bic-modal>
       </div>
     `;
 
@@ -183,8 +173,26 @@ class AppFrame extends BaseElement {
     logout.removeEventListener('click', this.AuthorizationService.logout);
   }
 
-  authChanged = (loggedin) => {
+  authChanged = (loggedin, openMode) => {
     if (loggedin === true) {
+
+      // show a user select
+      if (openMode === true) {
+
+        const content =
+          `<impersonate-dialog>
+           </impersonate-dialog>`;
+        this.ModalService.showDialog('Impersonate User', content, BicModal.OK_ONLY)
+          .then( (form) => {
+            const userToImpersonate = form.form.getSelectedUser();
+            this.AuthorizationService._impersonate(userToImpersonate).then( user => {
+              this.find('#user-name').textContent = user.firstName;
+            });
+            form.closer();
+          }
+        );
+      }
+
       this.showApp();
     }
     else {
@@ -231,4 +239,4 @@ class AppFrame extends BaseElement {
   };
 }
 
-export default registerElement('AuthorizationService', 'StyleService')(AppFrame);
+export default registerElement('AuthorizationService', 'StyleService', 'ModalService')(AppFrame);

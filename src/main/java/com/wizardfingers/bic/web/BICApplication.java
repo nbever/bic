@@ -15,8 +15,10 @@ import com.wizardfingers.bic.services.UserAPI;
 import com.wizardfingers.bic.web.auth.Authorizer;
 import com.wizardfingers.bic.web.filters.AuthorizationFeature;
 import com.wizardfingers.bic.web.health.BasicHealthCheck;
+import com.wizardfingers.bic.web.rest.Configuration;
 import com.wizardfingers.bic.web.rest.Login;
 import com.wizardfingers.bic.web.rest.Students;
+import com.wizardfingers.bic.web.rest.Users;
 
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
@@ -43,16 +45,20 @@ public class BICApplication extends Application<BICConfiguration>{
 		StudentAPI studentApi = new StudentAPI(mongoClient);
 		UserAPI userApi = new UserAPI(mongoClient);
 		
-		Authorizer authorizer = new Authorizer( config.getAuthConfiguration(), userApi );
+		Authorizer authorizer = new Authorizer( config.getAuthConfiguration(), config.getModeConfiguration(), userApi );
 		AuthorizationFeature authFeature = new AuthorizationFeature( authorizer );
-		
+
+		Users userResource = new Users(userApi);
 		Students studentResource = new Students(studentApi);
 		Login login = new Login( authorizer );
+		Configuration configResource = new Configuration( config.getModeConfiguration(), userApi );
 		
 		env.healthChecks().register("Basic", new BasicHealthCheck());
 		env.jersey().register( authFeature );
+		env.jersey().register(userResource);
 		env.jersey().register(studentResource);
 		env.jersey().register(login);
+		env.jersey().register(configResource);
 		
 	}
 

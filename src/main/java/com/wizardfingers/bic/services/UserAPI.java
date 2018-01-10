@@ -11,7 +11,10 @@ package com.wizardfingers.bic.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.mongojack.DBCursor;
+
 import com.mongodb.DB;
+import com.wizardfingers.bic.model.Student;
 import com.wizardfingers.bic.model.User;
 
 /**
@@ -47,6 +50,16 @@ public class UserAPI extends BaseService<User>{
 		return User.class;
 	}
 	
+	public User getUserById( String id ) {
+		Optional<User> user = getDBWrapper().find().is("_id", id).toArray().stream().findFirst();
+		
+		if (user.isPresent()) {
+			return user.get();
+		}
+		
+		return null;
+	}
+	
 	public User getUserByLogin( String emailAddress ) {
 		List<User> users = getDBWrapper().find().is("email", emailAddress).toArray();
 		
@@ -57,6 +70,11 @@ public class UserAPI extends BaseService<User>{
 		}
 		
 		return null;
+	}
+	
+	public List<User> getUsers() {
+		DBCursor<User> users = getDBWrapper().find();
+		return users.toArray();
 	}
 
 	/* (non-Javadoc)

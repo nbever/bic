@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ROLE {
-	ADMIN, STUDENT, TEACHER;
+	ADMIN, STUDENT, TEACHER, OPEN;
 
 	@JsonCreator
 	public static ROLE fromString(LinkedHashMap<String, String> obj) {

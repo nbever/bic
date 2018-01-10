@@ -3,6 +3,10 @@ import isFunction from 'lodash/isFunction';
 
 class AuthorizationService {
 
+  constructor() {
+    this._openMode = false;
+  }
+
   login = () => {
     gapi.auth2.getAuthInstance().signIn();
   };
@@ -10,6 +14,18 @@ class AuthorizationService {
   logout = () => {
     gapi.auth2.getAuthInstance().signOut();
   };
+
+  isOpenMode = () => {
+    return fetch('/api/config/operating_mode',
+      {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      }
+    );
+  }
 
   registerForChanges = (me) => {
 
@@ -35,11 +51,26 @@ class AuthorizationService {
   get loggedin() {
 
     if ( isNil(this._isLoggedIn)) {
-      gapi.load('client:auth2', this._initClient);
+      this.isOpenMode().then( (response) => {
+        return response.json();
+      })
+      .then( (json) => {
+        if (json.mode === 'OPEN') {
+          this._openMode = true;
+          this._updateSigninStatus(true);
+        }
+        else {
+          gapi.load('client:auth2', this._initClient);
+        }
+      });
     }
 
     return this._isLoggedIn;
   };
+
+  get user() {
+    return this._user;
+  }
 
   get listeners() {
 
@@ -71,20 +102,41 @@ class AuthorizationService {
     // If the signin status is changed to signedIn, we make an API call.
     this.listeners.forEach( (listener) => {
       if (isFunction(listener.authChanged)) {
-        listener.authChanged(isSignedIn);
+        listener.authChanged(isSignedIn, this._openMode);
       }
     });
 
     this._isLoggedIn = isSignedIn;
 
-    if (isSignedIn) {
+    if (isSignedIn && this._openMode !== true) {
       this._getToken();
     }
   }
 
+  _impersonate = (user) => {
+    const userPromise = new Promise( (resolve, reject) => {
+      fetch(`/api/config/impersonate/${user._value}`,
+        {
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        })
+        .then( response => {
+          response.json().then(json => {
+            this._user = json;
+            resolve(this._user);
+          });
+        });
+    });
+
+    return userPromise;
+  };
+
   _getToken = () => {
 
-    const auth = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().id_token;
+    const auth = this._openMode ? '0123456789' : gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().id_token;
 
     fetch(`/api/login`, {
       method: 'post',
