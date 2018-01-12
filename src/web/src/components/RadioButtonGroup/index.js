@@ -5,9 +5,19 @@ import isNil from 'lodash/isNil';
 
 class RadioButtonGroup extends BaseElement {
 
+  static HORIZONTAL = 'HORIZONTAL';
+  static VERTICAL = 'VERTICAL';
+
   get template() {
     const template = `
       <style>
+        .horizontal {
+          display: flex;
+        }
+
+        ::slotted(radio-button) {
+          padding-right: 8px;
+        }
       </style>
       <div class="radio-button-group">
         <slot></slot>
@@ -15,6 +25,29 @@ class RadioButtonGroup extends BaseElement {
     `;
 
     return template;
+  }
+
+  setDefaults() {
+    this._layout = RadioButtonGroup.VERTICAL;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.setLayout();
+  }
+
+  setLayout = () => {
+
+    const group = this.find('.radio-button-group');
+    this.removeClass(group, 'horizontal');
+    this.removeClass(group, 'vertical');
+
+    if (this.getAttribute('layout') === RadioButtonGroup.HORIZONTAL) {
+      this.addClass(group, 'horizontal');
+    }
+    else {
+      this.addClass(group, 'vertical');
+    }
   }
 
   get radioButtons() {

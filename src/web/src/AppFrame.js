@@ -171,6 +171,7 @@ class AppFrame extends BaseElement {
     const logout = this.shadowRoot.querySelector('.logout');
     loginButton.removeEventListener('click', this.AuthorizationService.login);
     logout.removeEventListener('click', this.AuthorizationService.logout);
+    this.AuthorizationService.unregister(this);
   }
 
   authChanged = (loggedin, openMode) => {

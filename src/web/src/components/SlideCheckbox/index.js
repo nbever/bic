@@ -95,6 +95,14 @@ class SlideCheckbox extends BaseElement {
     return this._label;
   }
 
+  get accentColor() {
+    return this._accentColor;
+  }
+
+  set accentColor(aColor) {
+    this._accentColor = aColor;
+  }
+
   get checkbox() {
     if ( isNil( this._checkbox ) ) {
       this._checkbox = this.find( 'input' );

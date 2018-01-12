@@ -40,10 +40,12 @@ public class Login {
 	
 	@POST
 	@Path("/")
-	public String login( @Context HttpServletResponse response, LoginParams login ) {
+	public User login( @Context HttpServletResponse response, LoginParams login ) {
+		
+		User user;
 		
 		try {
-			User user = getAuthorizer().authenticateUser( login.getToken() );
+			user = getAuthorizer().authenticateUser( login.getToken() );
 			
 			if ( user == null ) {
 				throw new AuthenticationException();
@@ -57,7 +59,7 @@ public class Login {
 			throw new WebApplicationException("Authentication Failed", HttpStatus.UNAUTHORIZED_401);
 		}
 
-		return "YES!";
+		return user;
 	}
 	
 	private Authorizer getAuthorizer() {

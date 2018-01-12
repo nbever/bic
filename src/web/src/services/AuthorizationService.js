@@ -28,11 +28,6 @@ class AuthorizationService {
   }
 
   registerForChanges = (me) => {
-
-    if (!isFunction(me.authChanged)) {
-      throw new Error("An authorization listener must implement method 'authChanged(bool).'");
-    }
-
     this.listeners.push(me);
   };
 
@@ -70,6 +65,16 @@ class AuthorizationService {
 
   get user() {
     return this._user;
+  }
+
+  set user(aUser) {
+    this._user = aUser;
+
+    this.listeners.forEach( l => {
+      if(isFunction(l.userChanged)) {
+        l.userChanged(aUser);
+      }
+    });
   }
 
   get listeners() {
@@ -125,7 +130,7 @@ class AuthorizationService {
         })
         .then( response => {
           response.json().then(json => {
-            this._user = json;
+            this.user = json;
             resolve(this._user);
           });
         });
@@ -143,10 +148,12 @@ class AuthorizationService {
       body: JSON.stringify({ token: auth }),
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'text/plain'
+        'Accept': '*/*'
       }
     }).then((resp) => {
-      console.log(resp);
+      resp.json().then( (jsn) => {
+        this.user = json;
+      });
     });
   };
 }
