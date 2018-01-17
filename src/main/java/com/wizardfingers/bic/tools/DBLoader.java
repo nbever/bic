@@ -1,6 +1,6 @@
 /* Copyright (C) 2017 Nate Bever - All Rights Reserved
  * You may use, distribute and modify this code under the
- * terms of the Apache 2.0 license, which unfortunately won't be
+ * terms of the Apache 2.0 license, which unfortunately won"t be
  * written for another century.
  *
  * You should have received a copy of the Apache 2.0 license with
@@ -37,8 +37,28 @@ import com.wizardfingers.bic.model.User;
 public class DBLoader {
 	
 	private static final Integer thisYear = 2017;
-
+	private static Integer numberOfStudents = 400;
+	private static Integer numberOfTeachers = 40;
+	private static Integer incidentsToBuild = 100;
+	private static String filename = "build_db.sh";
+	
 	public static void main(String[] args) {
+		
+		if (args.length > 0) {
+			numberOfStudents = Integer.parseInt(args[0]);
+		}
+		
+		if (args.length > 1) {
+			numberOfTeachers = Integer.parseInt(args[1]);
+		}		
+
+		if (args.length > 2) {
+			incidentsToBuild = Integer.parseInt(args[2]);
+		}
+		
+		if (args.length > 3) {
+			filename = args[3];
+		}
 		
 		DBLoader loader = new DBLoader();
 		try {
@@ -77,10 +97,13 @@ public class DBLoader {
 		try ( FileWriter fw = getFileWriter() ) {
 			List<Student> students = insertStudents(fw);
 			List<User> users = insertTeachers(fw);
+			List<User> admins = insertAdmins(fw);
 			
 			createDefaultRoles(fw);
 			
 			List<Discipline> disciplines = createDisciplineConfiguration(fw);
+			
+			users.addAll(admins);
 			
 			createDisciplines(fw, students, users, disciplines);
 		}
@@ -116,7 +139,7 @@ public class DBLoader {
 		List<Student> students = new ArrayList<Student>();
 		
 		//create 400 students
-		for ( int i = 0; i < 400; i++) {
+		for ( int i = 0; i < numberOfStudents; i++) {
 
 			String[] names = buildFullName();
 			String firstName = names[0];
@@ -131,9 +154,8 @@ public class DBLoader {
 			Instant instant = Instant.now();
 			instant = instant.minus(Duration.ofDays(365*(13+ thisYear - graduatingClass)));
 			instant = instant.plusMillis((int)(Math.random() * (1000*60*60*24*365)));
-			Date birthday = new Date(instant.getEpochSecond()*1000);
 			
-			Student student = new Student(firstName, lastName, middleName, birthday, schoolId, email, null, role, userName, graduatingClass );
+			Student student = new Student(firstName, lastName, middleName, instant.getEpochSecond(), schoolId, email, null, role, userName, graduatingClass );
 			students.add(student);
 			
 			ObjectMapper om = new ObjectMapper();
@@ -149,7 +171,7 @@ public class DBLoader {
 		List<User> teachers = new ArrayList<User>();
 		
 		//create 40 teachers
-		for ( int i = 0; i < 40; i++) {
+		for ( int i = 0; i < numberOfTeachers; i++) {
 
 			String[] names = buildFullName();
 			String firstName = names[0];
@@ -160,17 +182,12 @@ public class DBLoader {
 			String email = firstName.toLowerCase() + "." + middleName.toLowerCase().substring(0,  1) + "." + lastName.toLowerCase() + "@gmail.com";
 			ROLE role = ROLE.TEACHER;
 			
-			if ( i < 2 ) {
-				role = ROLE.ADMIN;
-			}
-			
 			String userName = firstName.toLowerCase().substring(0, 1) + lastName.toLowerCase() + ((int)(Math.random() * 100));
 			Instant instant = Instant.now();
 			instant = instant.minus(Duration.ofDays(365 * ((int)(Math.random() * 45) ) + 22 ));
 			instant = instant.plusMillis((int)(Math.random() * (1000*60*60*24*365)));
-			Date birthday = new Date(instant.getEpochSecond()*1000);
 			
-			User teacher = new User(firstName, lastName, middleName, birthday, schoolId, email, null, role, userName );
+			User teacher = new User(firstName, lastName, middleName, instant.getEpochSecond(), schoolId, email, null, role, userName );
 			teachers.add(teacher);
 			
 			ObjectMapper om = new ObjectMapper();
@@ -179,6 +196,21 @@ public class DBLoader {
 		}
 		
 		return teachers;		
+	}
+	
+	private List<User> insertAdmins(FileWriter fw) throws IOException {
+		User mike = new User("Mike", "Martz", "Nathan", 328082400L, "00001", "mnmartz@gmail.com", null, ROLE.ADMIN, "mnmartz" );
+		User nate = new User("Nate", "Bever", "James", 381049200L, "00002", "bever.nate@gmail.com", null, ROLE.ADMIN, "nbever" );
+		
+		List<User> admins = Arrays.asList(mike, nate);
+		
+		for (User user: admins) {
+			ObjectMapper om = new ObjectMapper();
+			String json = om.writeValueAsString(user);
+			fw.write("db.user.insert(" + json + ");\n");
+		}
+		
+		return admins;
 	}
 	
 	private void createDefaultRoles(FileWriter fw) throws IOException {
@@ -240,7 +272,6 @@ public class DBLoader {
 	private void createDisciplines(FileWriter fw, List<Student> students, List<User> teachers, List<Discipline> disciplineOptions) throws IOException {
 		
 		Random random = new Random();
-		int incidentsToBuild = random.nextInt(500);
 		
 		for ( int i = 0; i < incidentsToBuild; i++ ) {
 			Student student = students.get(random.nextInt(students.size()-1));
@@ -285,23 +316,23 @@ public class DBLoader {
 				scheduleCalendar.setTime(incidentCalendar.getTime());
 				scheduleCalendar.add(Calendar.DAY_OF_MONTH, random.nextInt(21));
 				
-				Date completedCalendar = null;
+				Long completedCalendar = -1L;
 				
 				if ( status == INCIDENT_STATE.COMPLETED || status == INCIDENT_STATE.PENDING_RESTITUTION ) {
-					completedCalendar =  ((Calendar)scheduleCalendar.clone()).getTime();
+					completedCalendar =  ((Calendar)scheduleCalendar.clone()).getTimeInMillis() / 1000;
 				}
 				
 				d = new AssignmentDiscipline(d.getName(), d.getDescription(), 
-					status == INCIDENT_STATE.COMPLETED, scheduleCalendar.getTime(), 
+					status == INCIDENT_STATE.COMPLETED, (scheduleCalendar.getTimeInMillis() / 1000), 
 					completedCalendar, ((AssignmentDiscipline)d).getAssignmentDescription());
 			}
 			
-			Date adminDate = null;
+			Long adminDate = -1L;
 			
 			if ( status != INCIDENT_STATE.WAITING_ADMINISTRATION ) {
 				Calendar adminCal = (Calendar)incidentCalendar.clone();
 				adminCal.add(Calendar.DAY_OF_MONTH, random.nextInt(2));
-				adminDate = adminCal.getTime();
+				adminDate = adminCal.getTimeInMillis() / 1000;
 			}
 			
 			String reflection = null;
@@ -316,8 +347,8 @@ public class DBLoader {
 				admin.getUuid(),
 				Arrays.asList(d),
 				status,
-				incidentCalendar.getTime(),
-				incidentCalendar.getTime(),
+				incidentCalendar.getTimeInMillis() / 1000,
+				incidentCalendar.getTimeInMillis() / 1000,
 				adminDate,
 				reflection,
 				Collections.emptyList(),
@@ -334,7 +365,7 @@ public class DBLoader {
 	private FileWriter getFileWriter() throws IOException {
 		
 		if ( fileWriter == null ) {
-			fileWriter = new FileWriter("build_db.sh", false);
+			fileWriter = new FileWriter(filename, false);
 		}
 		
 		return fileWriter;

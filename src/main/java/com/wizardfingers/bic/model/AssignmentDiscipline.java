@@ -9,15 +9,17 @@
  */
 package com.wizardfingers.bic.model;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AssignmentDiscipline extends Discipline{
 
-	private Date scheduledDate;
-	private Date dateServed;
+	private Long scheduledDate;
+	private Long dateServed;
 	private String assignmentDescription;
+	
+	protected AssignmentDiscipline() {
+		super();
+	}
 	
 	/**
 	 * @param name
@@ -25,7 +27,7 @@ public class AssignmentDiscipline extends Discipline{
 	 * @param completed
 	 */
 	public AssignmentDiscipline(String name, String description, Boolean completed,
-		Date scheduledDate, Date dateServed, String assignmentDescription) {
+		Long scheduledDate, Long dateServed, String assignmentDescription) {
 		
 		super(name, description, completed);
 		
@@ -36,12 +38,12 @@ public class AssignmentDiscipline extends Discipline{
 
 	
 	@JsonProperty
-	public Date getScheduledDate() {
+	public Long getScheduledDate() {
 		return scheduledDate;
 	}
 	
 	@JsonProperty
-	public Date getDateServed() {
+	public Long getDateServed() {
 		return dateServed;
 	}
 	

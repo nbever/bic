@@ -10,6 +10,7 @@ class SlideTimePicker extends BaseElement {
         <style>
         .slide-time-picker {
           position: relative;
+          margin-right: 12px;
         }
 
         input {
@@ -113,7 +114,7 @@ class SlideTimePicker extends BaseElement {
   connectedCallback() {
     super.connectedCallback();
 
-    const timeString = this.time.format('HH:mm A');
+    const timeString = this.time.format('hh:mm A');
     this.hourSpinner.value = timeString.substring(0, 2);
     this.minuteSpinner.value = timeString.substring(3, 5);
     this.amPmInput.value = timeString.substring(6);
@@ -191,6 +192,9 @@ class SlideTimePicker extends BaseElement {
     this.hourSpinner.value = timeString.substring(0, 2);
     this.minuteSpinner.value = timeString.substring(3, 5);
     this.amPmInput.value = timeString.substring(6);
+
+    const event = new CustomEvent('datechange', {detail: this._time});
+    this.dispatchEvent(event);
   }
 
   get accentColor() {

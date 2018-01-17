@@ -45,7 +45,7 @@ class SlideCheckbox extends BaseElement {
         }
 
         .focused {
-          box-shadow: 0px 0px 12px 2px {{ accentColor }};
+          box-shadow: 0px 0px 4px 2px {{ accentColor }};
         }
 
         .underline {

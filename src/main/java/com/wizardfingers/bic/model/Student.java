@@ -1,7 +1,5 @@
 package com.wizardfingers.bic.model;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -23,7 +21,7 @@ public class Student extends User{
 	 * @param role
 	 * @param username
 	 */
-	public Student(String firstName, String lastName, String middleName, Date birthday, String schoolId, String email,
+	public Student(String firstName, String lastName, String middleName, Long birthday, String schoolId, String email,
 			String token, ROLE role, String username, Integer graduatingClass) {
 		
 		super(firstName, lastName, middleName, birthday, schoolId, email, token, role, username);

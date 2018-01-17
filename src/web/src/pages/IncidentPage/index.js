@@ -3,40 +3,29 @@ import { BaseElement, registerElement } from 'single-malt';
 import SlideCheckbox from '../../components/SlideCheckbox';
 import RadioButtonGroup from '../../components/RadioButtonGroup';
 import RadioButton from '../../components/RadioButton';
+import CannedDateRange from '../../components/CannedDateRange';
+import SlideTable from '../../components/SlideTable';
+import SlideTableHeader from '../../components/SlideTable/SlideTableHeader';
+
+import IncidentSearch from '../IncidentSearch';
+
+import moment from 'moment';
 
 class IncidentPage extends BaseElement {
 
   get template() {
     const t = `
       <style>
-        @import url('assets/fonts/bic-icons/bic-icons.css');
-
         #incident-page {
-          padding-top: 24px;
+          position: absolute;
+          top: 0px;
+          bottom: 0px;
+          left: 0px;
+          right: 0px;
+          padding-top: 34px;
         }
 
-        .search-block {
-          margin-bottom: 16px;
-          padding-left: 24px;
-          padding-right: 24px;
-          padding-top: 12px;
-        }
-
-        .search-block>div:first-child {
-          width: 100%;
-          border-bottom: 1px solid ${this.StyleService.textColor};
-          margin-bottom: 8px;
-        }
-
-        .search-type {
-          display: flex;
-        }
-
-        .radio-button-group {
-          display: flex;
-        }
-
-        .side-by-side {
+        .flex {
           display: flex;
         }
 
@@ -45,19 +34,8 @@ class IncidentPage extends BaseElement {
         }
 
         .top-panel {
-          margin-bottom: 12px;
-          margin-left: 24px;
-        }
-
-        .filter-panel {
-          background-color: #cccccc;
-          width: 250px;
-          transition: 200ms;
-        }
-
-        .filter-panel.closed {
-          width: 32px;
-          overflow: hidden;
+          margin: 24px;
+          position: relative;
         }
 
         .title-bar {
@@ -67,6 +45,10 @@ class IncidentPage extends BaseElement {
           display: flex;
           justify-content: space-between;
           position: relative;
+        }
+
+        .date-select {
+          margin-top: 8px;
         }
 
         .rotate {
@@ -90,52 +72,42 @@ class IncidentPage extends BaseElement {
           visibility: hidden;
         }
 
-        [class^="bic-icon-"], [class*=" bic-icon-"] {
-          cursor: pointer;
+        .between {
+          justify-content: space-between;
+        }
+
+        .advanced-search {
+          position: absolute;
+          top: 34px;
+          right: 0px;
+          bottom: 0px;
+          overflow: auto;
         }
       </style>
       <div id="incident-page">
         <div class="top-panel">
-          <div class="search-type">
+          <div class="search-type flex">
             <div class="search-label">Search Type:</div>
             <radio-button-group layout=${RadioButtonGroup.HORIZONTAL}>
-              <radio-button id="student-radio" text="Student" value="student" accent-color=${this.StyleService.accentColor}></radio-button>
               <radio-button id="incident-radio" text="Incident" value="incident" accent-color=${this.StyleService.accentColor}></radio-button>
+              <radio-button id="student-radio" text="Student" value="student" accent-color=${this.StyleService.accentColor}></radio-button>
             </radio-button-group>
           </div>
-          <div class="date-select">
+          <div class="date-select flex">
             <div class="search-label">Date Range:</div>
-
+            <canned-date-range accent-color=${this.StyleService.accentColor}></canned-date-range>
+          </div>
+          <div>
+            <slide-button id="search-button">Search</slide-button>
           </div>
         </div>
 
-        <div class="side-by-side">
-          <div class="filter-panel">
-            <div class="title-bar">
-              <div class="advanced-search">Advanced Search</div>
-              <div class="rotate hide">Advanced Search</div>
-              <i class="bic-icon-circle-left"></i>
-              <i class="bic-icon-circle-right hide"></i>
-            </div>
-            <div class="search-blocks">
-              <div class="years search-block">
-                <div>Class</div>
-                <slide-checkbox id="freshman" text-color=${this.StyleService.textColor} accent-color=${this.StyleService.accentColor}>
-                  <div>Freshman</div>
-                </slide-checkbox>
-                <slide-checkbox id="sophomore" text-color=${this.StyleService.textColor} accent-color=${this.StyleService.accentColor}>
-                  <div>Sophomore</div>
-                </slide-checkbox>
-                <slide-checkbox id="junior" text-color=${this.StyleService.textColor} accent-color=${this.StyleService.accentColor}>
-                  <div>Junior</div>
-                </slide-checkbox>
-                <slide-checkbox id="senior" text-color=${this.StyleService.textColor} accent-color=${this.StyleService.accentColor}>
-                  <div>Senior</div>
-                </slide-checkbox>
-              </div>
-            </div>
-          </div>
+        <div class="advanced-search">
+          <incident-search></incident-search>
         </div>
+
+        <slide-table></slide-table>
+
       </div>
     `;
 
@@ -145,44 +117,53 @@ class IncidentPage extends BaseElement {
   connectedCallback() {
     super.connectedCallback();
 
-    const studentSearch = this.find('#student-radio');
-    studentSearch.selected = true;
-    this.find('#senior').checked = true;
-    this.find('#freshman').checked = true;
-    this.find('#junior').checked = true;
-    this.find('#sophomore').checked = true;
+    const incidentSearch = this.find('#incident-radio');
+    incidentSearch.selected = true;
+
+    const headers = [
+      new SlideTableHeader('Time', 250, 'incidentTime', (t) => moment(parseInt(t)*1000).format('MM/DD/YYYY hh:mm a')),
+      new SlideTableHeader('Student', 250, 'studentString', (s) => {
+        return new Promise( (resolve) => {
+          this.UserService.getUser(s).then( user => {
+            resolve(`${user.lastName}, ${user.firstName}`);
+          });
+        });
+      }),
+      new SlideTableHeader('Description', 250, 'description')
+    ];
+
+    this.find('slide-table').headers = headers;
   }
 
   addEventListeners() {
-    this.find('.bic-icon-circle-left').addEventListener('click', this.hideAdvancedSearch);
-    this.find('.bic-icon-circle-right').addEventListener('click', this.showAdvancedSearch);
+    this.find('#search-button').addEventListener('click', this.submitSearch);
+    this.find('#search-button').addEventListener('keyup', this.submitSearch);
   }
 
   removeEventListeners() {
-    this.find('.bic-icon-circle-left').addEventListener('click', this.hideAdvancedSearch);
-    this.find('.bic-icon-circle-right').addEventListener('click', this.showAdvancedSearch);
+    this.find('#search-button').removeEventListener('click', this.submitSearch);
+    this.find('#search-button').removeEventListener('keyup', this.submitSearch);
   }
 
-  hideAdvancedSearch = () => {
-    const filterPanel = this.find('.filter-panel');
-    this.addClass(filterPanel, 'closed');
+  submitSearch = ($event) => {
+    if ($event.type === 'keyup' && $event.keyCode !== 13) {
+      return;
+    }
 
-    this.addClass(this.find('.advanced-search'), 'hide');
-    this.addClass(this.find('.bic-icon-circle-left'), 'hide');
-    this.removeClass(this.find('.bic-icon-circle-right'), 'hide');
-    this.removeClass(this.find('.rotate'), 'hide');
-    this.addClass(this.find('.search-blocks'), 'invisible');
-  }
+    const datePicker = this.find('canned-date-range');
+    const searchPanel = this.find('incident-search');
+    const from = datePicker.from;
+    const to = datePicker.to;
+    const states = searchPanel.states;
+    const dateTypes = searchPanel.dateTypes;
 
-  showAdvancedSearch = () => {
-    const filterPanel = this.find('.filter-panel');
-    this.removeClass(filterPanel, 'closed');
-    this.removeClass(this.find('.advanced-search'), 'hide');
-    this.addClass(this.find('.bic-icon-circle-right'), 'hide');
-    this.removeClass(this.find('.bic-icon-circle-left'), 'hide');
-    this.addClass(this.find('.rotate'), 'hide');
-    this.removeClass(this.find('.search-blocks'), 'invisible');
+    this.IncidentService.findIncidents(from, to, states, dateTypes)
+      .then( results => {
+        results.json().then( jData => {
+          this.find('slide-table').data = jData;
+        })
+      });
   }
 }
 
-export default registerElement('StyleService')(IncidentPage);
+export default registerElement('StyleService', 'IncidentService', 'UserService')(IncidentPage);

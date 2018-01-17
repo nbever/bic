@@ -11,6 +11,7 @@ class MainTabs extends BaseElement {
       <style>
         a {
           color: white;
+          z-index: 1;
         }
       </style>
       <div>

@@ -117,6 +117,11 @@ class AppFrame extends BaseElement {
           padding-right: 6px;
           background-repeat: no-repeat;
         }
+
+        .main-content {
+          height: calc( 100% - 64px );
+          position: relative;
+        }
       </style>
       <div class="app">
         <div class="header hide">
@@ -140,7 +145,7 @@ class AppFrame extends BaseElement {
           </div>
         </div>
         <div class="main-content hide">
-          <alert-bar></alert-bar>
+          <!--<alert-bar></alert-bar>-->
           <main-tabs></main-tabs>
           <span class="content">
           </span>

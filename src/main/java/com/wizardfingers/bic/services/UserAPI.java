@@ -15,7 +15,6 @@ import org.mongojack.DBCursor;
 import org.mongojack.DBSort;
 
 import com.mongodb.DB;
-import com.wizardfingers.bic.model.Student;
 import com.wizardfingers.bic.model.User;
 
 /**

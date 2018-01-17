@@ -9,27 +9,18 @@
  */
 package com.wizardfingers.bic.model;
 
-import java.util.Date;
-import java.util.UUID;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.wizardfingers.bic.model.serializers.JsonDateDeserializer;
-import com.wizardfingers.bic.model.serializers.JsonDateSerializer;
 
 public class ModificationEvent {
 
-	private Date modifyDate;
+	private Long modifyDate;
 	private String fieldChanged;
 	private Object previousValue;
 	private Object newValue;
 	private String editorUuid;
 	
-	@JsonSerialize(using=JsonDateSerializer.class)
-	@JsonDeserialize(using=JsonDateDeserializer.class)
 	@JsonProperty
-	public Date getModifyDate() {
+	public Long getModifyDate() {
 		return modifyDate;
 	}
 	

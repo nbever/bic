@@ -10,12 +10,14 @@
 package com.wizardfingers.bic.web;
 
 import com.mongodb.DB;
+import com.wizardfingers.bic.services.IncidentAPI;
 import com.wizardfingers.bic.services.StudentAPI;
 import com.wizardfingers.bic.services.UserAPI;
 import com.wizardfingers.bic.web.auth.Authorizer;
 import com.wizardfingers.bic.web.filters.AuthorizationFeature;
 import com.wizardfingers.bic.web.health.BasicHealthCheck;
 import com.wizardfingers.bic.web.rest.Configuration;
+import com.wizardfingers.bic.web.rest.Incidents;
 import com.wizardfingers.bic.web.rest.Login;
 import com.wizardfingers.bic.web.rest.Students;
 import com.wizardfingers.bic.web.rest.Users;
@@ -44,12 +46,14 @@ public class BICApplication extends Application<BICConfiguration>{
 		
 		StudentAPI studentApi = new StudentAPI(mongoClient);
 		UserAPI userApi = new UserAPI(mongoClient);
+		IncidentAPI incidentApi = new IncidentAPI(mongoClient);
 		
 		Authorizer authorizer = new Authorizer( config.getAuthConfiguration(), config.getModeConfiguration(), userApi );
 		AuthorizationFeature authFeature = new AuthorizationFeature( authorizer );
 
 		Users userResource = new Users(userApi);
 		Students studentResource = new Students(studentApi);
+		Incidents incidentResource = new Incidents(incidentApi);
 		Login login = new Login( authorizer );
 		Configuration configResource = new Configuration( config.getModeConfiguration(), userApi );
 		
@@ -57,6 +61,7 @@ public class BICApplication extends Application<BICConfiguration>{
 		env.jersey().register( authFeature );
 		env.jersey().register(userResource);
 		env.jersey().register(studentResource);
+		env.jersey().register(incidentResource);
 		env.jersey().register(login);
 		env.jersey().register(configResource);
 		

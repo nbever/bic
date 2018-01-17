@@ -8,7 +8,12 @@
  */
 package com.wizardfingers.bic.services;
 
+import java.util.Date;
 import java.util.List;
+
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
+import org.mongojack.DBSort;
 
 import com.mongodb.DB;
 import com.wizardfingers.bic.model.Incident;
@@ -37,8 +42,23 @@ public class IncidentAPI extends BaseService<Incident>{
 		return COLLECTION_NAME;
 	}
 	
-	public List<Incident> get() {
-		List<Incident> incidents = getDBWrapper().find().toArray();
+	public List<Incident> get(Date from, Date to, List<String> states, List<String> dateTypes) {
+		
+		Query[] stateQueries = new Query[states.size()];
+		
+		for ( int i = 0; i < states.size(); i++ ) {
+			stateQueries[i] = DBQuery.is("status.value", states.get(i));
+		}
+		
+		Long fromL = from.getTime() / 1000;
+		Long toL = to.getTime() / 1000;
+		
+		List<Incident> incidents = getDBWrapper().find()
+			.greaterThanEquals("incidentTime", fromL )
+			.lessThanEquals("incidentTime", toL)
+			.sort(DBSort.desc("incidentTime"))
+			.toArray();
+		
 		return incidents;
 	}
 

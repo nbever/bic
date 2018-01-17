@@ -16,6 +16,10 @@ public class HourDiscipline extends Discipline{
 	private Float hoursCompleted;
 	private Float hoursAssigned;
 	
+	protected HourDiscipline() {
+		super();
+	}
+	
 	/**
 	 * @param name
 	 * @param description
