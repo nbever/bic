@@ -8,6 +8,9 @@ First you need to make sure that you have a database running - which you can do 
 
 `mongodb/bin/mongod --dbpath db`
 
+Advanced:  If you want to load a new database first drop the current db titled 'bic' and run this command:
+`mongo localhost:27017/bic < !your_db_file_sscript!`
+
 There is now a script at the root called `run_server` that can handle all the running and building needs.  Here are the options:
 
 -b | build	Build the product.

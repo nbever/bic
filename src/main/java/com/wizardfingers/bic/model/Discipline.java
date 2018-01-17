@@ -10,12 +10,18 @@
 package com.wizardfingers.bic.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
 public class Discipline extends BaseObject{
 
 	private String name;
 	private String description;
 	private Boolean completed;
+	
+	protected Discipline() {
+		super();
+	}
 	
 	/**
 	 * 

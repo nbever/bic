@@ -9,7 +9,6 @@
 package com.wizardfingers.bic.model.serializers;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -22,8 +21,6 @@ import com.fasterxml.jackson.databind.SerializerProvider;
  *
  */
 public class JsonDateSerializer extends JsonSerializer<Date> {
-
-	public static final SimpleDateFormat formatter = new SimpleDateFormat("MM.dd.yyyy-HH:mm:ss.SSS");
 	
 	/* (non-Javadoc)
 	 * @see com.fasterxml.jackson.databind.JsonSerializer#serialize(java.lang.Object, com.fasterxml.jackson.core.JsonGenerator, com.fasterxml.jackson.databind.SerializerProvider)
@@ -32,7 +29,6 @@ public class JsonDateSerializer extends JsonSerializer<Date> {
 	public void serialize(Date date, JsonGenerator gen, SerializerProvider serializers)
 			throws IOException, JsonProcessingException {
 		
-		String formattedDate = formatter.format(date);
-		gen.writeString(formattedDate);
+		gen.writeNumber(date.getTime());
 	}
 }

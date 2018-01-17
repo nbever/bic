@@ -8,14 +8,8 @@
  */
 package com.wizardfingers.bic.model;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.wizardfingers.bic.model.serializers.JsonDateDeserializer;
-import com.wizardfingers.bic.model.serializers.JsonDateSerializer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User extends BaseObject{
@@ -23,12 +17,12 @@ public class User extends BaseObject{
 	private String firstName;
 	private String lastName;
 	private String middleName;
-	private Date birthday;
+	private Long birthday;
 	private String schoolId;
 	private String email;
 	private String token;
 	private ROLE role;
-	private Date lastLogin;
+	private Long lastLogin;
 	private String username;
 	
 	protected User() {
@@ -46,7 +40,7 @@ public class User extends BaseObject{
 	 * @param role
 	 * @param username
 	 */
-	public User(String firstName, String lastName, String middleName, Date birthday, String schoolId, String email,
+	public User(String firstName, String lastName, String middleName, Long birthday, String schoolId, String email,
 			String token, ROLE role, String username) {
 		super();
 		this.firstName = firstName;
@@ -75,10 +69,8 @@ public class User extends BaseObject{
 		return middleName;
 	}
 	
-	@JsonSerialize(using=JsonDateSerializer.class)
-	@JsonDeserialize(using=JsonDateDeserializer.class)
 	@JsonProperty
-	public Date getBirthday() {
+	public Long getBirthday() {
 		return birthday;
 	}
 	
@@ -102,10 +94,8 @@ public class User extends BaseObject{
 		return role;
 	}
 	
-	@JsonSerialize(using=JsonDateSerializer.class)
-	@JsonDeserialize(using=JsonDateDeserializer.class)
 	@JsonProperty
-	public Date getLastLogin() {
+	public Long getLastLogin() {
 		return lastLogin;
 	}
 	

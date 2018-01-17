@@ -5,6 +5,7 @@ import AuthorizationService from './services/AuthorizationService';
 import StyleService from './services/StyleService';
 import ModalService from './services/ModalService';
 import UserService from './services/UserService';
+import IncidentService from './services/IncidentService';
 
 // load widgets
 // import ListBuilder from './components/ListBuilder';
@@ -26,7 +27,8 @@ ServiceRegistry.register(
   AuthorizationService,
   UserService,
   StyleService,
-  ModalService
+  ModalService,
+  IncidentService
 );
 
 const AppFrame = require('./AppFrame');

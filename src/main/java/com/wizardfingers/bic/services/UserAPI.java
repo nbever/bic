@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.mongojack.DBCursor;
+import org.mongojack.DBSort;
 
 import com.mongodb.DB;
-import com.wizardfingers.bic.model.Student;
 import com.wizardfingers.bic.model.User;
 
 /**
@@ -73,7 +73,7 @@ public class UserAPI extends BaseService<User>{
 	}
 	
 	public List<User> getUsers() {
-		DBCursor<User> users = getDBWrapper().find();
+		DBCursor<User> users = getDBWrapper().find().sort(DBSort.asc("lastName"));
 		return users.toArray();
 	}
 

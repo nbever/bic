@@ -1,6 +1,5 @@
 import TabBar from './components/TabBar';
 import OverviewPage from './pages/OverviewPage';
-import StudentPage from './pages/StudentPage';
 import IncidentPage from './pages/IncidentPage';
 
 import { Router, BaseElement, registerElement } from 'single-malt';
@@ -12,15 +11,16 @@ class MainTabs extends BaseElement {
       <style>
         a {
           color: white;
+          z-index: 1;
         }
       </style>
       <div>
-        <tab-bar>
-          <a data-url="/student">Student</a>
+        <tab-bar accent-color=${this.StyleService.accentColor}>
+          <a id="overview-tab" data-url="/overview">Overview</a>
           <a data-url="/incident">Incident</a>
         </tab-bar>
         <wc-router>
-          <wc-route persist path="/student" page="student-page"></wc-route>
+          <wc-route persist path="/overview" page="overview-page"></wc-route>
           <wc-route persist path="/incident" page="incident-page"></wc-route>
         </wc-router>
       </div>
@@ -29,7 +29,8 @@ class MainTabs extends BaseElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this.find('a').click();
+
+    this.AuthorizationService.registerForChanges(this);
   }
 
   navigate($event) {
@@ -55,7 +56,16 @@ class MainTabs extends BaseElement {
     as.forEach( a => {
       a.removeEventListener('click', this.navigate);
     });
+
+    this.AuthorizationService.unregister(this);
+  }
+
+  userChanged = (user) => {
+    if (user.role !== 'ADMIN' && user.role !== 'TEACHER') {
+      const ot = this.find('#overview-tab');
+      ot.parentElement.removeChild(ot);
+    }
   }
 }
 
-export default registerElement()(MainTabs);
+export default registerElement('AuthorizationService', 'StyleService')(MainTabs);

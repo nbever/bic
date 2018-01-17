@@ -3,7 +3,6 @@ const template = `
     .tab-bar-container {
       display: flex;
       background-color: #cccccc;
-      padding-top: 4px;
     }
 
     ::slotted(a) {
@@ -12,7 +11,7 @@ const template = `
     }
 
     ::slotted(a.selected) {
-      color: green !important;
+      background-color: {{ accentColor }} !important;
     }
   </style>
   <div class="tab-bar-container">

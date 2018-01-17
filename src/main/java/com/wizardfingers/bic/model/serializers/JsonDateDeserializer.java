@@ -28,7 +28,7 @@ public class JsonDateDeserializer extends JsonDeserializer<Date> {
 	@Override
 	public Date deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		
-		return null;
+		return new Date(p.getLongValue());
 	}
 
 }

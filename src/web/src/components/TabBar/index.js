@@ -24,6 +24,18 @@ class TabBar extends BaseElement {
     this._tabs = as;
   }
 
+  get accentColor() {
+    this._accentColor;
+  }
+
+  set accentColor(aColor) {
+    this._accentColor = aColor;
+  }
+
+  setDefaults() {
+    this.accentColor = this.StyleService.accentColor;
+  }
+
   addEventListeners() {
     this.tabs = this.shadowRoot.querySelector('slot').assignedNodes().filter( n => n.tagName === 'A') ;
     this._callbacks = [];
@@ -50,4 +62,4 @@ class TabBar extends BaseElement {
   }
 }
 
-export default registerElement()(TabBar);
+export default registerElement('StyleService')(TabBar);

@@ -19,6 +19,7 @@ class SlideCalendar extends BaseElement {
           position: relative;
           text-align: left;
           width: 108px;
+          margin-right: 28px;
         }
 
         .input-field {
@@ -30,7 +31,7 @@ class SlideCalendar extends BaseElement {
           border-bottom: 1px solid {{ textColor }};
           transition: 200ms;
           margin-top: 24px;
-          width: 92px;
+          width: 94px;
           color: {{ textColor }};
         }
 
@@ -56,7 +57,7 @@ class SlideCalendar extends BaseElement {
         }
 
         .undertow {
-          border-bottom: 4px solid red;
+          border-bottom: 4px solid {{ accentColor }};
           width: 0px;
           transition: 250ms;
         }
@@ -77,6 +78,7 @@ class SlideCalendar extends BaseElement {
           position: absolute;
           top: 66px;
           overflow: hidden;
+          z-index: 1;
         }
 
         .drawer.open {
@@ -241,6 +243,11 @@ class SlideCalendar extends BaseElement {
   set selectedDay(aDay) {
     this._selectedDay = aDay;
     this.inputField.setAttribute('value', this._selectedDay.format( 'MM/DD/YYYY' ) );
+    this.fieldFocused();
+    this.fieldUnfocused();
+
+    const event = new CustomEvent('datechange', {detail: this._selectedDay});
+    this.dispatchEvent(event);
   }
 
   get visibleDay() {

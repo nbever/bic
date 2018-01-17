@@ -9,14 +9,9 @@
  */
 package com.wizardfingers.bic.model;
 
-import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.wizardfingers.bic.model.serializers.JsonDateDeserializer;
-import com.wizardfingers.bic.model.serializers.JsonDateSerializer;
 
 public class Incident extends BaseObject {
 
@@ -26,14 +21,18 @@ public class Incident extends BaseObject {
 	private List<Discipline> disciplineAssignments;
 	private INCIDENT_STATE status;
 	
-	private Date incidentTime;
-	private Date creationTime;
-	private Date administerTime;
+	private Long incidentTime;
+	private Long creationTime;
+	private Long administerTime;
 	
 	private String reflection;
 	private List<ModificationEvent> incidentHistory;
 	private String title;
 	private String description;
+	
+	protected Incident() {
+		super();
+	}
 	
 	public Incident(
 		String studentId,
@@ -41,9 +40,9 @@ public class Incident extends BaseObject {
 		String adminId,
 		List<Discipline> disciplines,
 		INCIDENT_STATE status,
-		Date incidentTime,
-		Date creationTime,
-		Date administerTime,
+		Long incidentTime,
+		Long creationTime,
+		Long administerTime,
 		String reflection,
 		List<ModificationEvent> incidentHistory,
 		String title,
@@ -88,24 +87,18 @@ public class Incident extends BaseObject {
 		return status;
 	}
 	
-	@JsonSerialize(using=JsonDateSerializer.class)
-	@JsonDeserialize(using=JsonDateDeserializer.class)
 	@JsonProperty
-	public Date getIncidentTime() {
+	public Long getIncidentTime() {
 		return incidentTime;
 	}
 	
-	@JsonSerialize(using=JsonDateSerializer.class)
-	@JsonDeserialize(using=JsonDateDeserializer.class)
 	@JsonProperty
-	public Date getCreationTime() {
+	public Long getCreationTime() {
 		return creationTime;
 	}
 	
-	@JsonSerialize(using=JsonDateSerializer.class)
-	@JsonDeserialize(using=JsonDateDeserializer.class)
 	@JsonProperty
-	public Date getAdministerTime() {
+	public Long getAdministerTime() {
 		return administerTime;
 	}
 	
