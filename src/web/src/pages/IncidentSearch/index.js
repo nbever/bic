@@ -11,7 +11,7 @@ class IncidentSearch extends BaseElement {
           background-color: #cccccc;
           width: 250px;
           transition: 200ms;
-          position: relative;
+          overflow: hidden;
         }
 
         .filter-panel.closed {
@@ -20,7 +20,8 @@ class IncidentSearch extends BaseElement {
         }
 
         .search-blocks {
-          padding-top: 42px;
+          overflow: auto;
+          height: 100%;
         }
 
         .search-block {
@@ -66,22 +67,27 @@ class IncidentSearch extends BaseElement {
           color: white;
           padding: 12px;
           display: flex;
-          position: fixed;
-          width: 226px;
+          justify-content: space-between;
           z-index: 1;
         }
 
         .advanced-search {
           padding-left: 8px;
         }
+
+        .side-by-side {
+          position: relative;
+          height: 100%;
+          width: 100%;
+        }
       </style>
       <div class="side-by-side flex">
         <div class="filter-panel">
           <div class="title-bar">
             <div class="rotate hide">Advanced Search</div>
-            <i class="bic-icon-circle-left hide"></i>
-            <i class="bic-icon-circle-right"></i>
             <div class="advanced-search">Advanced Search</div>
+            <i class="bic-icon-circle-right hide"></i>
+            <i class="bic-icon-circle-left"></i>
           </div>
           <div class="search-blocks">
 
@@ -148,13 +154,13 @@ class IncidentSearch extends BaseElement {
   }
 
   addEventListeners() {
-    this.find('.bic-icon-circle-right').addEventListener('click', this.hideAdvancedSearch);
-    this.find('.bic-icon-circle-left').addEventListener('click', this.showAdvancedSearch);
+    this.find('.bic-icon-circle-left').addEventListener('click', this.hideAdvancedSearch);
+    this.find('.bic-icon-circle-right').addEventListener('click', this.showAdvancedSearch);
   }
 
   removeEventListeners() {
-    this.find('.bic-icon-circle-right').addEventListener('click', this.hideAdvancedSearch);
-    this.find('.bic-icon-circle-left').addEventListener('click', this.showAdvancedSearch);
+    this.find('.bic-icon-circle-left').addEventListener('click', this.hideAdvancedSearch);
+    this.find('.bic-icon-circle-right').addEventListener('click', this.showAdvancedSearch);
   }
 
   hideAdvancedSearch = () => {
@@ -162,8 +168,8 @@ class IncidentSearch extends BaseElement {
     this.addClass(filterPanel, 'closed');
 
     this.addClass(this.find('.advanced-search'), 'hide');
-    this.addClass(this.find('.bic-icon-circle-right'), 'hide');
-    this.removeClass(this.find('.bic-icon-circle-left'), 'hide');
+    this.addClass(this.find('.bic-icon-circle-left'), 'hide');
+    this.removeClass(this.find('.bic-icon-circle-right'), 'hide');
     this.removeClass(this.find('.rotate'), 'hide');
     this.addClass(this.find('.search-blocks'), 'invisible');
   }
@@ -172,8 +178,8 @@ class IncidentSearch extends BaseElement {
     const filterPanel = this.find('.filter-panel');
     this.removeClass(filterPanel, 'closed');
     this.removeClass(this.find('.advanced-search'), 'hide');
-    this.addClass(this.find('.bic-icon-circle-left'), 'hide');
-    this.removeClass(this.find('.bic-icon-circle-right'), 'hide');
+    this.addClass(this.find('.bic-icon-circle-right'), 'hide');
+    this.removeClass(this.find('.bic-icon-circle-left'), 'hide');
     this.addClass(this.find('.rotate'), 'hide');
     this.removeClass(this.find('.search-blocks'), 'invisible');
   }

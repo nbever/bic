@@ -1,10 +1,19 @@
 class SlideTableHeader {
 
-  constructor(displayText, width, key, transform = (t) => t) {
+  constructor(displayText, width, key, transform = (t) => t, sortByValue = true) {
     this.display = displayText;
     this.width = width;
     this.key = key;
     this.transform = transform;
+    this.sortByValue = sortByValue;
+  }
+
+  set sortByValue(shouldI) {
+    this._sortByValue = shouldI;
+  }
+
+  get sortByValue() {
+    return this._sortByValue;
   }
 
   set transform(aTransform) {

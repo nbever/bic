@@ -22,7 +22,7 @@ class IncidentPage extends BaseElement {
           bottom: 0px;
           left: 0px;
           right: 0px;
-          padding-top: 34px;
+          padding-top: 38px;
         }
 
         .flex {
@@ -77,36 +77,46 @@ class IncidentPage extends BaseElement {
         }
 
         .advanced-search {
-          position: absolute;
-          top: 34px;
-          right: 0px;
-          bottom: 0px;
-          overflow: auto;
+
+        }
+
+        .full-page {
+          height: 100%;
+        }
+
+        .table-container {
+          padding-top: 12px;
         }
       </style>
       <div id="incident-page">
-        <div class="top-panel">
-          <div class="search-type flex">
-            <div class="search-label">Search Type:</div>
-            <radio-button-group layout=${RadioButtonGroup.HORIZONTAL}>
-              <radio-button id="incident-radio" text="Incident" value="incident" accent-color=${this.StyleService.accentColor}></radio-button>
-              <radio-button id="student-radio" text="Student" value="student" accent-color=${this.StyleService.accentColor}></radio-button>
-            </radio-button-group>
+
+        <div class="flex full-page">
+          <div class="advanced-search">
+            <incident-search></incident-search>
           </div>
-          <div class="date-select flex">
-            <div class="search-label">Date Range:</div>
-            <canned-date-range accent-color=${this.StyleService.accentColor}></canned-date-range>
-          </div>
-          <div>
-            <slide-button id="search-button">Search</slide-button>
+
+          <div class="top-panel">
+            <div class="search-type flex">
+              <div class="search-label">Search Type:</div>
+              <radio-button-group layout=${RadioButtonGroup.HORIZONTAL}>
+                <radio-button id="incident-radio" text="Incident" value="incident" accent-color=${this.StyleService.accentColor}></radio-button>
+                <radio-button id="student-radio" text="Student" value="student" accent-color=${this.StyleService.accentColor}></radio-button>
+              </radio-button-group>
+            </div>
+            <div class="date-select flex">
+              <div class="search-label">Date Range:</div>
+              <canned-date-range accent-color=${this.StyleService.accentColor}></canned-date-range>
+            </div>
+            <div>
+              <slide-button id="search-button">Search</slide-button>
+            </div>
+
+            <div class="table-container">
+              <slide-table accent-color=${this.StyleService.accentColor} row-color="#f1d5d9"></slide-table>
+            </div>
+
           </div>
         </div>
-
-        <div class="advanced-search">
-          <incident-search></incident-search>
-        </div>
-
-        <slide-table></slide-table>
 
       </div>
     `;
@@ -121,15 +131,15 @@ class IncidentPage extends BaseElement {
     incidentSearch.selected = true;
 
     const headers = [
-      new SlideTableHeader('Time', 250, 'incidentTime', (t) => moment(parseInt(t)*1000).format('MM/DD/YYYY hh:mm a')),
-      new SlideTableHeader('Student', 250, 'studentString', (s) => {
+      new SlideTableHeader('Time', '250px', 'incidentTime', (t) => moment(parseInt(t)*1000).format('MM/DD/YYYY hh:mm a')),
+      new SlideTableHeader('Student', '250px', 'studentString', (s) => {
         return new Promise( (resolve) => {
           this.UserService.getUser(s).then( user => {
             resolve(`${user.lastName}, ${user.firstName}`);
           });
         });
-      }),
-      new SlideTableHeader('Description', 250, 'description')
+      }, false),
+      new SlideTableHeader('Description', '250px', 'description', (t) => t, false)
     ];
 
     this.find('slide-table').headers = headers;
