@@ -25,6 +25,7 @@ class SlideButton extends BaseElement {
           outline: none;
           cursor: pointer;
           margin: 2px;
+          width: {{ width }};
         }
 
         button:hover {
@@ -47,6 +48,7 @@ class SlideButton extends BaseElement {
   setDefaults() {
     this._accentColor = this.StyleService.accentColor;
     this._textColor = 'white';
+    this._width = 'auto';
     this._hoverColor = this.StyleService.hoverColor;
     this._activeColor = this.StyleService.activeColor;
     this._fontFamily = this.StyleService.fontFamily;
@@ -58,6 +60,14 @@ class SlideButton extends BaseElement {
 
   set fontFamily(font) {
     this._fontFamily = font;
+  }
+
+  get width() {
+    return this._width;
+  }
+
+  set width(width) {
+    this._width = width;
   }
 
   get textColor() {

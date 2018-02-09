@@ -1,4 +1,8 @@
 import {BaseElement, registerElement} from 'single-malt';
+import SlideListBuilder from '../../components/SlideListBuilder';
+import Option from '../../components/SlideDropDown/Option';
+
+import isNil from 'lodash/isNil';
 
 class IncidentSearch extends BaseElement {
 
@@ -92,19 +96,8 @@ class IncidentSearch extends BaseElement {
           <div class="search-blocks">
 
             <div class="search-block">
-              <div>Date of</div>
-              <slide-checkbox id="occurence" text-color=${this.StyleService.textColor} accent-color=${this.StyleService.accentColor}>
-                <div>Occurence</div>
-              </slide-checkbox>
-              <slide-checkbox id="acceptance" text-color=${this.StyleService.textColor} accent-color=${this.StyleService.accentColor}>
-                <div>Acceptance</div>
-              </slide-checkbox>
-              <slide-checkbox id="reflection" text-color=${this.StyleService.textColor} accent-color=${this.StyleService.accentColor}>
-                <div>Reflection</div>
-              </slide-checkbox>
-              <slide-checkbox id="completion" text-color=${this.StyleService.textColor} accent-color=${this.StyleService.accentColor}>
-                <div>Completion</div>
-              </slide-checkbox>
+              <div>Students</div>
+              <slide-list-builder id="students" placeholder="Name" accent-color=${this.StyleService.accentColor} text-color=${this.StyleService.textColor}></slide-list-builder>
             </div>
 
             <div class="search-block">
@@ -130,6 +123,18 @@ class IncidentSearch extends BaseElement {
 
   connectedCallback() {
     super.connectedCallback();
+
+    const dropDown = this.find('slide-list-builder');
+    this.UserService.students.then( (users) => {
+      dropDown.options = users.map(user => {
+        let nameString = `${user.lastName}, ${user.firstName}`;
+
+        if (!isNil(user.graduatingClass)) {
+          nameString += ` (${user.graduatingClass})`;
+        }
+        return new Option(user._id, nameString);
+      });
+    });
   }
 
   get states() {
@@ -137,10 +142,16 @@ class IncidentSearch extends BaseElement {
 
     if (this.find('#open').checked === true) statesSelected.push('WAITING_ADMINISTRATION');
     if (this.find('#pending').checked === true) statesSelected.push('PENDING_RESTITUTION');
-    if (this.find('#reflection').checked === true) statesSelected.push('PENDING_REFLECTION');
     if (this.find('#closed').checked === true) statesSelected.push('COMPLETED');
 
     return statesSelected;
+  }
+
+  get students() {
+    const listBuilder = this.find('#students');
+    return listBuilder.terms.map((term) => {
+      return term.value;
+    });
   }
 
   get dateTypes() {
@@ -185,4 +196,4 @@ class IncidentSearch extends BaseElement {
   }
 }
 
-export default registerElement('StyleService')(IncidentSearch);
+export default registerElement('StyleService', 'UserService')(IncidentSearch);

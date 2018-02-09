@@ -10,6 +10,7 @@ package com.wizardfingers.bic.web.rest;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -50,7 +51,7 @@ public class Incidents {
 		@QueryParam("from") String fromDateStr,
 		@QueryParam("to") String toDateStr,
 		@QueryParam("states") String statesStr,
-		@QueryParam("dateTypes") String dateTypesStr) throws ParseException {
+		@QueryParam("students") String studentsStr) throws ParseException {
 		
 		String datePattern = "MM/dd/yyyy HH:mm a";
 		SimpleDateFormat sdf = new SimpleDateFormat(datePattern);
@@ -61,7 +62,7 @@ public class Incidents {
 			INCIDENT_STATE.PENDING_RESTITUTION.name(),
 			INCIDENT_STATE.PENDING_REFLECTION.name(),
 			INCIDENT_STATE.COMPLETED.name());
-		List<String> dateTypes = Arrays.asList("incident", "administer", "complete");
+		List<String> students = new ArrayList<String>();
 		
 		if ( fromDateStr != null ) {
 			from = sdf.parse(fromDateStr.trim());
@@ -75,11 +76,11 @@ public class Incidents {
 			states = Arrays.asList(statesStr.trim().split(","));
 		}
 		
-		if ( dateTypes != null ) {
-			dateTypes = Arrays.asList(dateTypesStr.trim().split(","));
+		if ( studentsStr != null ) {
+			students = Arrays.asList(studentsStr.trim().split(","));
 		}
 		
-		List<Incident> incidents = getIncidentApi().get(from, to, states, dateTypes);
+		List<Incident> incidents = getIncidentApi().get(from, to, states, students);
 		return incidents;
 	}
 	

@@ -158,6 +158,14 @@ class SlideDropDown extends BaseElement {
     this._textColor = aColor;
   }
 
+  get width() {
+    return this._width;
+  }
+
+  set width(width) {
+    this._width = width;
+  }
+
   get inputField() {
     if (isNil(this._inputField)) {
       this._inputField = this.find('input');

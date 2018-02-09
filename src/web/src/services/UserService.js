@@ -24,6 +24,18 @@ class UserService {
     });
   }
 
+  get students() {
+    return new Promise( (resolve) => {
+      this.users.then(users => {
+        const students = users.filter(u => {
+          return u.role.value === 'STUDENT';
+        });
+
+        resolve(students);
+      });
+    });
+  }
+
   getUser(uid) {
     return new Promise( (resolve, reject) => {
       this.users.then( users => {

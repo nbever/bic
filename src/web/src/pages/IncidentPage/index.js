@@ -139,7 +139,20 @@ class IncidentPage extends BaseElement {
           });
         });
       }, false),
-      new SlideTableHeader('Description', '250px', 'description', (t) => t, false)
+      new SlideTableHeader('Description', '250px', 'description', (t) => t, false),
+      new SlideTableHeader('Status', '100px', 'status', (s) => {
+        switch(s.value) {
+          case 'PENDING_RESTITUTION':
+          case 'PENDING_REFLECTION':
+            return 'Pending';
+          case 'COMPLETED':
+            return 'Completed';
+          case 'WAITING_ADMINISTRATION':
+            return 'Waiting Admin.';
+          default:
+            return 'Unknown';
+        }
+      })
     ];
 
     this.find('slide-table').headers = headers;
@@ -165,9 +178,9 @@ class IncidentPage extends BaseElement {
     const from = datePicker.from;
     const to = datePicker.to;
     const states = searchPanel.states;
-    const dateTypes = searchPanel.dateTypes;
+    const students = searchPanel.students;
 
-    this.IncidentService.findIncidents(from, to, states, dateTypes)
+    this.IncidentService.findIncidents(from, to, states, students)
       .then( results => {
         results.json().then( jData => {
           this.find('slide-table').data = jData;
