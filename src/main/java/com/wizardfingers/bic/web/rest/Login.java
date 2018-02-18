@@ -9,6 +9,7 @@
 package com.wizardfingers.bic.web.rest;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -20,9 +21,11 @@ import javax.ws.rs.core.MediaType;
 import org.apache.http.auth.AuthenticationException;
 import org.eclipse.jetty.http.HttpStatus;
 import com.wizardfingers.bic.model.LoginParams;
+import com.wizardfingers.bic.model.ROLE;
 import com.wizardfingers.bic.model.User;
 import com.wizardfingers.bic.web.filters.AuthorizationFilter;
 import com.wizardfingers.bic.web.auth.Authorizer;
+import com.wizardfingers.bic.web.auth.BICAuth;
 
 /**
  * @author us
@@ -38,11 +41,13 @@ public class Login {
 		this.authorizer = authorizer;
 	}
 	
+	@BICAuth(ROLE.STUDENT)
 	@POST
 	@Path("/")
-	public User login( @Context HttpServletResponse response, LoginParams login ) {
+	public User login( @Context HttpServletRequest request, @Context HttpServletResponse response, LoginParams login ) {
 		
 		User user;
+		String token = request.getHeader(AuthorizationFilter.BIC_AUTH_HEADER);
 		
 		try {
 			user = getAuthorizer().authenticateUser( login.getToken() );
@@ -50,9 +55,6 @@ public class Login {
 			if ( user == null ) {
 				throw new AuthenticationException();
 			}
-			
-			Cookie authCookie = new Cookie(AuthorizationFilter.BIC_AUTH_HEADER, login.getToken());
-			response.addCookie( authCookie );
 			
 		}
 		catch( Exception authException ) {

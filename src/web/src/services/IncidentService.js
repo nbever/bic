@@ -20,6 +20,19 @@ class IncidentService {
     );
   }
 
+  getIncident(uuid) {
+    return bic_fetch(
+      `/api/incidents/${uuid}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      }
+    );
+  }
+
 }
 
 export default IncidentService;

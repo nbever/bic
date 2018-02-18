@@ -10,6 +10,7 @@ package com.wizardfingers.bic.services;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.mongojack.DBCursor;
 import org.mongojack.DBQuery;
@@ -18,6 +19,7 @@ import org.mongojack.DBSort;
 
 import com.mongodb.DB;
 import com.wizardfingers.bic.model.Incident;
+import com.wizardfingers.bic.model.User;
 
 /**
  * @author us
@@ -68,6 +70,16 @@ public class IncidentAPI extends BaseService<Incident>{
 		List<Incident> results = incidents.sort(DBSort.desc("incidentTime")).toArray();
 		
 		return results;
+	}
+	
+	public Incident get(String uuid) {
+		Optional<Incident> incident = getDBWrapper().find().is("_id", uuid).toArray().stream().findFirst();
+		
+		if (incident.isPresent()) {
+			return incident.get();
+		}
+		
+		return null;
 	}
 
 	/* (non-Javadoc)

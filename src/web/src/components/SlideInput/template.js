@@ -18,7 +18,7 @@ const template = `
   }
 
   .undertow {
-    border-bottom: 4px solid red;
+    border-bottom: 4px solid {{accentColor}};
     width: 0px;
     transition: 250ms;
   }

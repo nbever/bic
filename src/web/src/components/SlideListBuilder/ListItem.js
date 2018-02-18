@@ -5,7 +5,7 @@ class ListItem extends BaseElement {
   get template() {
     const template = `
       <style>
-        @import url('assets/fonts/bic-icons/bic-icons.css');
+        @import url('/assets/fonts/bic-icons/bic-icons.css');
 
         .row {
           display: flex;

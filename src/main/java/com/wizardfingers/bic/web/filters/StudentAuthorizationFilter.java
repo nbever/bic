@@ -8,6 +8,13 @@
  */
 package com.wizardfingers.bic.web.filters;
 
+import java.io.IOException;
+
+import javax.ws.rs.container.ContainerRequestContext;
+
+import org.apache.http.auth.AuthenticationException;
+
+import com.wizardfingers.bic.model.User;
 import com.wizardfingers.bic.web.auth.Authorizer;
 
 /**
@@ -18,5 +25,14 @@ public class StudentAuthorizationFilter extends AuthorizationFilter {
 
 	public StudentAuthorizationFilter( Authorizer authorizer ) {
 		super( authorizer );
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.wizardfingers.bic.web.filters.AuthorizationFilter#filter(javax.ws.rs.container.ContainerRequestContext)
+	 */
+	@Override
+	public void filter(ContainerRequestContext context) throws IOException {
+		super.filter(context);
+		String header = context.getHeaderString(AuthorizationFilter.BIC_AUTH_HEADER);
 	}
 }

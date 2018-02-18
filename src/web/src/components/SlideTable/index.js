@@ -115,6 +115,8 @@ class SlideTable extends BaseElement {
 
     this.data.forEach((datum, index) => {
       const row = document.createElement('tr');
+      row.addEventListener('click', () => this.rowClicked(datum));
+
       row.className = 'row';
 
       this.headers.forEach(header => {
@@ -144,6 +146,11 @@ class SlideTable extends BaseElement {
 
       table.appendChild(row);
     });
+  }
+
+  rowClicked = (datum) => {
+    const event = new CustomEvent('rowClicked', { detail: { data: datum } });
+    this.dispatchEvent(event);
   }
 
   get data() {

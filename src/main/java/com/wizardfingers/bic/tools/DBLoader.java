@@ -146,7 +146,7 @@ public class DBLoader {
 			String middleName = names[1];
 			String lastName = names[2];
 			
-			Integer graduatingClass = thisYear + Math.floorDiv(i, 100);
+			Integer graduatingClass = thisYear + (int)(Math.random() * 4);
 			String schoolId = UUID.randomUUID().toString();
 			String email = firstName.toLowerCase() + "." + middleName.toLowerCase().substring(0,  1) + "." + lastName.toLowerCase() + "@gmail.com";
 			ROLE role = ROLE.STUDENT;
@@ -275,9 +275,9 @@ public class DBLoader {
 		
 		for ( int i = 0; i < incidentsToBuild; i++ ) {
 			Student student = students.get(random.nextInt(students.size()-1));
-			User teacher = students.get(random.nextInt(teachers.size()-1));
-			User admin = students.get(random.nextInt(2));
-			int incidentYear = random.nextInt(thisYear - (student.getGraduatingClass() - 4)) + thisYear;
+			User teacher = teachers.get(random.nextInt(teachers.size()-1));
+			User admin = teachers.get(random.nextInt(2));
+			int incidentYear = random.nextInt(thisYear - 3);
 			
 			Calendar incidentCalendar = Calendar.getInstance();
 			incidentCalendar.set(Calendar.MONTH, Calendar.JUNE);

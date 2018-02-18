@@ -44,9 +44,23 @@ public class Authorizer {
 		this.userApi = userApi;
 	}
 	
+	public void setUser(User user) {
+		if ( !getModeConfig().equals(ModeConfig.MODE.OPEN) ) {
+			return;
+		}
+		
+		getAuthCache().put(user.getToken(), user);
+	}
+	
 	public User authenticateUser( String token ) throws AuthenticationException {
 		
 		if ( getAuthCache().containsKey( token ) ){
+			
+			// reset the timer
+			if ( getModeConfig().equals(ModeConfig.MODE.OPEN) ) {
+				getAuthCache().put(token, getAuthCache().get(token));
+			}
+			
 			return getAuthCache().get( token );
 		}
 		

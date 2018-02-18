@@ -68,10 +68,10 @@ class MainTabs extends BaseElement {
     if (user.role.value !== 'ADMIN' && user.role.value !== 'TEACHER') {
       const ot = this.find('#overview-tab');
       ot.parentElement.removeChild(ot);
-      this.sendUrl('/incident');
+      // this.sendUrl('/incident');
     }
     else {
-      this.sendUrl('/overview');
+      // this.sendUrl('/overview');
     }
   }
 }

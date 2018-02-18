@@ -5,7 +5,7 @@ class AlertBadge extends BaseElement {
   get template() {
     return `
       <style>
-        @import url('assets/fonts/bic-icons/bic-icons.css');
+        @import url('/assets/fonts/bic-icons/bic-icons.css');
 
         .container {
           display: flex;

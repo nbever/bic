@@ -1,6 +1,6 @@
 import {BaseElement, registerElement} from 'single-malt';
-import SlideListBuilder from '../../components/SlideListBuilder';
-import Option from '../../components/SlideDropDown/Option';
+import SlideListBuilder from '../../../../components/SlideListBuilder';
+import Option from '../../../../components/SlideDropDown/Option';
 
 import isNil from 'lodash/isNil';
 
@@ -9,7 +9,7 @@ class IncidentSearch extends BaseElement {
   get template() {
     const t = `
       <style>
-        @import url('assets/fonts/bic-icons/bic-icons.css');
+        @import url('/assets/fonts/bic-icons/bic-icons.css');
 
         .filter-panel {
           background-color: #cccccc;
@@ -95,7 +95,7 @@ class IncidentSearch extends BaseElement {
           </div>
           <div class="search-blocks">
 
-            <div class="search-block">
+            <div id="student-search-block" class="search-block">
               <div>Students</div>
               <slide-list-builder id="students" placeholder="Name" accent-color=${this.StyleService.accentColor} text-color=${this.StyleService.textColor}></slide-list-builder>
             </div>
@@ -135,6 +135,8 @@ class IncidentSearch extends BaseElement {
         return new Option(user._id, nameString);
       });
     });
+
+    this.findAll('slide-checkbox').forEach( (cb) => cb.checked = true);
   }
 
   get states() {
@@ -149,6 +151,11 @@ class IncidentSearch extends BaseElement {
 
   get students() {
     const listBuilder = this.find('#students');
+
+    if (isNil(listBuilder)) {
+      return [];
+    }
+
     return listBuilder.terms.map((term) => {
       return term.value;
     });
@@ -167,11 +174,20 @@ class IncidentSearch extends BaseElement {
   addEventListeners() {
     this.find('.bic-icon-circle-left').addEventListener('click', this.hideAdvancedSearch);
     this.find('.bic-icon-circle-right').addEventListener('click', this.showAdvancedSearch);
+    this.AuthorizationService.registerForChanges(this);
   }
 
   removeEventListeners() {
     this.find('.bic-icon-circle-left').addEventListener('click', this.hideAdvancedSearch);
     this.find('.bic-icon-circle-right').addEventListener('click', this.showAdvancedSearch);
+    this.AuthorizationService.unregister(this);
+  }
+
+  userChanged = (user) => {
+    if (user.role.value === 'STUDENT') {
+      const studentSearch = this.find('#student-search-block');
+      studentSearch.parentElement.removeChild(studentSearch);
+    }
   }
 
   hideAdvancedSearch = () => {
@@ -196,4 +212,4 @@ class IncidentSearch extends BaseElement {
   }
 }
 
-export default registerElement('StyleService', 'UserService')(IncidentSearch);
+export default registerElement('StyleService', 'UserService', 'AuthorizationService')(IncidentSearch);

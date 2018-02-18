@@ -54,6 +54,24 @@ class SlideInput extends BaseElement {
 
     return this._top;
   }
+
+  get value() {
+    return this.input.value;
+  }
+
+  set value(value) {
+    this.input.value = value;
+    this.fieldFocused();
+    this.fieldUnfocused();
+  }
+
+  get accentColor() {
+    return this._accentColor;
+  }
+
+  set accentColor(color) {
+    this._accentColor = color;
+  }
 }
 
 export default registerElement()(SlideInput);

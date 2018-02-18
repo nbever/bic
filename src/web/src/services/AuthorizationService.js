@@ -77,6 +77,10 @@ class AuthorizationService {
     });
   }
 
+  get savedToken() {
+    return this._savedToken;
+  }
+
   get listeners() {
 
     if (isNil(this._listeners)) {
@@ -113,7 +117,7 @@ class AuthorizationService {
 
     this._isLoggedIn = isSignedIn;
 
-    if (isSignedIn && this._openMode !== true) {
+    if (isSignedIn) {
       this._getToken();
     }
   }
@@ -125,7 +129,8 @@ class AuthorizationService {
           method: 'post',
           headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'BIC-Token': this.savedToken
           }
         })
         .then( response => {
@@ -142,13 +147,15 @@ class AuthorizationService {
   _getToken = () => {
 
     const auth = this._openMode ? '0123456789' : gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().id_token;
+    this._savedToken = auth;
 
     fetch(`/api/login`, {
       method: 'post',
       body: JSON.stringify({ token: auth }),
       headers: {
         'Content-Type': 'application/json',
-        'Accept': '*/*'
+        'Accept': '*/*',
+        'BIC-Token': `${auth}`
       }
     }).then((resp) => {
       resp.json().then( (jsn) => {

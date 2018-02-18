@@ -12,7 +12,7 @@ class BicModal extends BaseElement {
   get template() {
     const template = `
       <style>
-        @import url('assets/fonts/bic-icons/bic-icons.css');
+        @import url('/assets/fonts/bic-icons/bic-icons.css');
 
         div {
           font-family: {{ fontFamily }};

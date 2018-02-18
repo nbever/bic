@@ -53,7 +53,7 @@ class AppFrame extends BaseElement {
         }
 
         .logo{
-          background-image: url('assets/sandpoinths.jpg');
+          background-image: url('/assets/sandpoinths.jpg');
           background-size: contain;
         }
 
@@ -112,7 +112,7 @@ class AppFrame extends BaseElement {
           text-indent: -9999px;
           width: 32px;
           height: 32px;
-          background-image: url('assets/btn_google_light_normal_ios.svg');
+          background-image: url('/assets/btn_google_light_normal_ios.svg');
           background-size: 32px 32px;
           padding-right: 6px;
           background-repeat: no-repeat;

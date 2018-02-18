@@ -6,6 +6,10 @@ class UserService {
     this.cacheStale = false;
   }
 
+  formatUserName(user) {
+    return `${user.lastName}, ${user.firstName}`;
+  }
+
   get cacheStale() {
     this._userCacheStale;
   }
