@@ -3,6 +3,7 @@ import { BaseElement, registerElement } from 'single-malt';
 import isNil from 'lodash/isNil';
 import filter from 'lodash/filter';
 import forOwn from 'lodash/forOwn';
+import findIndex from 'lodash/findIndex';
 
 class SlideDropDown extends BaseElement {
 
@@ -158,6 +159,14 @@ class SlideDropDown extends BaseElement {
     this._textColor = aColor;
   }
 
+  get width() {
+    return this._width;
+  }
+
+  set width(width) {
+    this._width = width;
+  }
+
   get inputField() {
     if (isNil(this._inputField)) {
       this._inputField = this.find('input');
@@ -184,6 +193,20 @@ class SlideDropDown extends BaseElement {
 
   get selectedOption() {
     return this._selectedOption;
+  }
+
+  setSelectedKey(key) {
+    const option = this.options[key];
+    const htmlOptions = this.findAll('.option');
+    const index = findIndex( htmlOptions, (opt) => {
+      return opt.dataset.value === key;
+    });
+
+    this.inputField.value = option.displayText;
+    this._selectedOption = option;
+    this.selectedIndex = index;
+    this.sanitizeField();
+    this.focused();
   }
 
   get options() {

@@ -9,7 +9,7 @@ class SlideCalendar extends BaseElement {
   get template() {
     const template = `
       <style>
-        @import url('assets/fonts/bic-icons/bic-icons.css');
+        @import url('/assets/fonts/bic-icons/bic-icons.css');
 
         .flex {
           display: flex;
@@ -30,7 +30,7 @@ class SlideCalendar extends BaseElement {
           font-size: 18px;
           border-bottom: 1px solid {{ textColor }};
           transition: 200ms;
-          margin-top: 24px;
+          margin-top: 28px;
           width: 94px;
           color: {{ textColor }};
         }
@@ -52,7 +52,7 @@ class SlideCalendar extends BaseElement {
         }
 
         .top.on {
-          top: 12px;
+          top: 18px;
           font-size: 12px;
         }
 
@@ -67,7 +67,7 @@ class SlideCalendar extends BaseElement {
         }
 
         .calendar-icon {
-          padding-top: 34px;
+          padding-top: 38px;
           padding-left: 6px;
           cursor: pointer;
         }

@@ -8,11 +8,14 @@
  */
 package com.wizardfingers.bic.web.rest;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -26,6 +29,7 @@ import com.wizardfingers.bic.model.User;
 import com.wizardfingers.bic.model.config.ModeConfig;
 import com.wizardfingers.bic.services.UserAPI;
 import com.wizardfingers.bic.web.auth.BICAuth;
+import com.wizardfingers.bic.web.filters.AuthorizationFilter;
 
 /**
  * @author us
@@ -56,7 +60,7 @@ public class Configuration {
 	@POST
 	@Timed
 	@Path("impersonate/{id}")
-	public User impersonate(@PathParam("id") String id) throws HttpResponseException {
+	public User impersonate( @Context HttpServletResponse response, @PathParam("id") String id) throws HttpResponseException {
 		
 		if ( !getModeConfiguration().getMode().equals(ModeConfig.MODE.OPEN) ) {
 		  throw new HttpResponseException(Response.Status.FORBIDDEN.getStatusCode(), "This method is not allowed while running in closed mode.");

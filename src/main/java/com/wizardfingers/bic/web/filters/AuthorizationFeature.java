@@ -59,6 +59,7 @@ public class AuthorizationFeature implements DynamicFeature{
 			}
 			
 			context.register( authFilter );
+			context.register(AuthorizationResponseFilter.class);
 		}
 	}
 

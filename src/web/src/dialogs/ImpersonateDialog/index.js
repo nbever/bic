@@ -2,6 +2,7 @@ import { registerElement } from 'single-malt';
 import DialogIf from '../DialogIf'
 import SlideDropDown from '../../components/SlideDropDown';
 import Option from '../../components/SlideDropDown/Option';
+import isNil from 'lodash/isNil';
 
 class ImpersonateDialog extends DialogIf {
 
@@ -29,7 +30,12 @@ class ImpersonateDialog extends DialogIf {
     dropDown.mode = SlideDropDown.AUTO_COMPLETE;
     this.UserService.users.then( (users) => {
       dropDown.options = users.map(user => {
-        return new Option(user._id, `${user.lastName}, ${user.firstName} (${user.graduatingClass})`);
+        let nameString = `${user.lastName}, ${user.firstName}`;
+
+        if (!isNil(user.graduatingClass)) {
+          nameString += ` (${user.graduatingClass})`;
+        }
+        return new Option(user._id, nameString);
       });
     });
   }

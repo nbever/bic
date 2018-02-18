@@ -23,7 +23,7 @@ class SlideTimePicker extends BaseElement {
           font-size: 18px;
           border-bottom: 1px solid lightgray;
           transition: 200ms;
-          margin-top: 24px;
+          margin-top: 28px;
           -webkit-appearance: textfield;
           color: {{ textColor }};
         }
@@ -61,7 +61,7 @@ class SlideTimePicker extends BaseElement {
         }
 
         .top.on {
-          top: 12px;
+          top: 18px;
           font-size: 12px;
         }
 

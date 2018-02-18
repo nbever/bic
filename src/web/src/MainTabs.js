@@ -33,11 +33,15 @@ class MainTabs extends BaseElement {
     this.AuthorizationService.registerForChanges(this);
   }
 
-  navigate($event) {
+  navigate = ($event) => {
     const newUrl = $event.target.dataset.url;
+    this.sendUrl(newUrl);
+  }
+
+  sendUrl(url) {
     const event = new CustomEvent('urlchanged', {
       detail: {
-        url: newUrl,
+        url: url,
         replace: true,
       }
     });
@@ -61,9 +65,13 @@ class MainTabs extends BaseElement {
   }
 
   userChanged = (user) => {
-    if (user.role !== 'ADMIN' && user.role !== 'TEACHER') {
+    if (user.role.value !== 'ADMIN' && user.role.value !== 'TEACHER') {
       const ot = this.find('#overview-tab');
       ot.parentElement.removeChild(ot);
+      // this.sendUrl('/incident');
+    }
+    else {
+      // this.sendUrl('/overview');
     }
   }
 }

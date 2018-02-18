@@ -16,7 +16,7 @@ class SlideSpinner extends BaseElement {
           font-size: 18px;
           border-bottom: 1px solid lightgray;
           transition: 200ms;
-          margin-top: 24px;
+          margin-top: 28px;
           flex-grow: 1;
           -webkit-appearance: textfield;
           width: 100%;
@@ -42,7 +42,7 @@ class SlideSpinner extends BaseElement {
         .top {
           color: darkgray;
           position: absolute;
-          top: 32px;
+          top: 38px;
           left: 8px;
           font-size: 18px;
           pointer-events: none;
@@ -50,7 +50,7 @@ class SlideSpinner extends BaseElement {
         }
 
         .top.on {
-          top: 12px;
+          top: 18px;
           font-size: 12px;
         }
 

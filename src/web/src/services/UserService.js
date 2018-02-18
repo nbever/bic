@@ -6,6 +6,10 @@ class UserService {
     this.cacheStale = false;
   }
 
+  formatUserName(user) {
+    return `${user.lastName}, ${user.firstName}`;
+  }
+
   get cacheStale() {
     this._userCacheStale;
   }
@@ -21,6 +25,18 @@ class UserService {
 
     return new Promise( (resolve) => {
       resolve(this._users);
+    });
+  }
+
+  get students() {
+    return new Promise( (resolve) => {
+      this.users.then(users => {
+        const students = users.filter(u => {
+          return u.role.value === 'STUDENT';
+        });
+
+        resolve(students);
+      });
     });
   }
 

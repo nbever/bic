@@ -2,7 +2,8 @@ const template = `
   <style>
     .tab-bar-container {
       display: flex;
-      background-color: #cccccc;
+      background-color: #888888;
+      border-bottom: 4px solid #cccccc;
     }
 
     ::slotted(a) {
